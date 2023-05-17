@@ -16,10 +16,13 @@ describe("docu generator", () => {
       yamlFiles: [
         "src/connectors/index/create_connector_request_index_new.yaml",
         "src/connectors/index/update_connector_request_index_new.yaml",
+        // "src/connectors/index/common.yaml",
       ],
       specs: [bundled as unknown as OpenAPIObject],
     })
 
-    expect(output).toMatchSnapshot()
+    expect(JSON.stringify(output[0], null, 2)).toMatchFileSnapshot(
+      "./__snapshots__/output-0.json",
+    )
   })
 })
