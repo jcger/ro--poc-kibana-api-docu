@@ -1,0 +1,23 @@
+paths:
+  /s/{spaceId}/api/actions/connector/{connectorId}:
+    put:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/update_connector_request_index_new'
+components:
+  schemas:
+    update_connector_request_index_new:
+      title: Update index connector request
+      type: object
+      required:
+        - config
+        - name
+      properties:
+        config:
+          $ref: '#/components/schemas/config_properties_index'
+        name:
+          type: string
+          description: The display name for the connector.

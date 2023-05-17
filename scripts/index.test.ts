@@ -7,20 +7,21 @@
  */
 import { describe, expect, it } from "vitest"
 import { generate } from "./index"
-import bundled from "../test_data/common/bundled.json"
+import bundled from "../src/connectors/bundled.json"
 import { OpenAPIObject } from "./types/openapi_spec"
 
 describe("docu generator", () => {
-  it("one single definition file", async () => {
+  it("connectors example", async () => {
     const output = await generate({
       yamlFiles: [
-        "test_data/particular/index/create_connector_request_index_new.yaml",
+        "src/connectors/index/create_connector_request_index_new.yaml",
+        "src/connectors/index/update_connector_request_index_new.yaml",
       ],
       specs: [bundled as unknown as OpenAPIObject],
     })
 
     expect(JSON.stringify(output[0], null, 2)).toMatchFileSnapshot(
-      "../test_data/assertion/0-bundled.json"
+      "../__snapshots/0-bundled.json"
     )
   })
 })
