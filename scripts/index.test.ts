@@ -11,7 +11,7 @@ import bundled from "../test_data/common/bundled.json"
 import { OpenAPIObject } from "./types/openapi_spec"
 
 describe("docu generator", () => {
-  it("snapshot", async () => {
+  it("one single definition file", async () => {
     const output = await generate({
       yamlFiles: [
         "test_data/particular/index/create_connector_request_index_new.yaml",

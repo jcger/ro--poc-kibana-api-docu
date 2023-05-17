@@ -7,6 +7,14 @@ paths:
             schema:
               oneOf:
                 - $ref: '#/components/schemas/create_connector_request_index_new'
+  /s/{spaceId}/api/actions/connector/{connectorId}:
+    put:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/update_connector_request_index_new'
 components:
   schemas:
     create_connector_request_index_new:
@@ -30,6 +38,18 @@ components:
           type: string
           description: The display name for the connector.
           example: my-connector
+    update_connector_request_index_new:
+      title: Update index connector request
+      type: object
+      required:
+        - config
+        - name
+      properties:
+        config:
+          $ref: '#/components/schemas/config_properties_index'
+        name:
+          type: string
+          description: The display name for the connector.
     config_properties_index_new:
       title: Connector request properties for an index connector
       required:
