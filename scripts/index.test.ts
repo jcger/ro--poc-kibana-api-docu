@@ -5,10 +5,22 @@
  * in compliance with, at your election, the Elastic License 2.0 or the Server
  * Side Public License, v 1.
  */
+import { describe, expect, it } from "vitest"
+import { generate } from "./index"
+import bundled from "../test_data/common/bundled.json"
+import { OpenAPIObject } from "./types/openapi_spec"
 
-import { main } from "./index";
+describe("docu generator", () => {
+  it("snapshot", async () => {
+    const output = await generate({
+      yamlFiles: [
+        "test_data/particular/index/create_connector_request_index_new.yaml",
+      ],
+      specs: [bundled as unknown as OpenAPIObject],
+    })
 
-test("main", async () => {
-  const bundles = [];
-  await main();
-});
+    expect(JSON.stringify(output[0], null, 2)).toMatchFileSnapshot(
+      "../test_data/assertion/0-bundled.json"
+    )
+  })
+})

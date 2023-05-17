@@ -26,13 +26,14 @@ const PLUGIN_BUNDLES: string[] = [
   path.join(process.env.PWD, `${BUNDLED_PATH}/bundled.json`),
 ]
 
-export const main = async (yamlFiles: string[] = getYamlFiles()) => {
-  const specs = await Promise.all(
-    PLUGIN_BUNDLES.map((fileUri: string) =>
-      importJSONSpecFile({ fileName: fileUri })
-    )
-  )
-  await Promise.all(
+export const generate = async ({
+  yamlFiles,
+  specs,
+}: {
+  yamlFiles: string[]
+  specs: OpenAPIObject[]
+}): Promise<OpenAPIObject[]> => {
+  return await Promise.all(
     specs.map(async (spec: OpenAPIObject) => {
       const partialSpecFileUris = getSpecDefinitionFiles({
         paths: spec.paths,
@@ -43,18 +44,36 @@ export const main = async (yamlFiles: string[] = getYamlFiles()) => {
           importYamlSpecFile({ fileName: uri })
         )
       )
-      const output = partialSpecs.reduce(
+      return partialSpecs.reduce(
         (acc: OpenAPIObject, partialSpec: Partial<OpenAPIObject>) => {
           return mergeSpecs({ spec: acc, partialSpec })
         },
         spec
       )
-      exportJsonSpecFile({
-        fileName: "build/bundled.json",
-        content: JSON.stringify(output, null, 2),
-      })
     })
   )
 }
 
-main()
+const main = async () => {
+  const bundledSpecs = await Promise.all(
+    PLUGIN_BUNDLES.map((fileUri: string) =>
+      importJSONSpecFile({ fileName: fileUri })
+    )
+  )
+
+  const outputSpecs = await generate({
+    yamlFiles: getYamlFiles(),
+    specs: bundledSpecs,
+  })
+
+  outputSpecs.forEach((output: OpenAPIObject, idx) => {
+    exportJsonSpecFile({
+      fileName: `build/${idx}-bundled.json`,
+      content: JSON.stringify(output, null, 2),
+    })
+  })
+}
+
+if (process.env.NODE_ENV !== "test") {
+  main()
+}
