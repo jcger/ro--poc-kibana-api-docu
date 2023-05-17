@@ -20,8 +20,6 @@ describe("docu generator", () => {
       specs: [bundled as unknown as OpenAPIObject],
     })
 
-    expect(JSON.stringify(output[0], null, 2)).toMatchFileSnapshot(
-      "../__snapshots/0-bundled.json"
-    )
+    expect(output).toMatchSnapshot()
   })
 })

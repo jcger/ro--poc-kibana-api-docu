@@ -44,12 +44,13 @@ export const generate = async ({
           importYamlSpecFile({ fileName: uri })
         )
       )
-      return partialSpecs.reduce(
+      const output = partialSpecs.reduce(
         (acc: OpenAPIObject, partialSpec: Partial<OpenAPIObject>) => {
           return mergeSpecs({ spec: acc, partialSpec })
         },
         spec
       )
+      return output
     })
   )
 }
