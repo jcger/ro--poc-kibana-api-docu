@@ -11,12 +11,8 @@ npm install
 ### Usage
 
 ```
-npm start
+npm test
 ```
-
-### Ouptut
-
-Can be found under `build/bundled.json`
 
 ### Licence
 
