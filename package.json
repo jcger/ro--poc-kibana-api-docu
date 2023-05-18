@@ -6,8 +6,8 @@
   "scripts": {
     "test:debug": "NODE_ENV=test vitest --inspect-brk --single-thread",
     "test": "NODE_ENV=test vitest",
-    "start": "vite-node scripts",
-    "dev": "nodemon scripts -e ts,json,yaml --exec 'npm run start'"
+    "start": "vite-node src",
+    "dev": "nodemon src -e ts,json,yaml --exec 'npm run start'"
   },
   "keywords": [],
   "author": "",

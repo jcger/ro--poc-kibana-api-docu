@@ -6,8 +6,8 @@
  * Side Public License, v 1.
  */
 
-import mergeWith from 'lodash/mergeWith';
-import { OpenAPIObject } from './types/openapi_spec';
+import mergeWith from "lodash/mergeWith"
+import { OpenAPIObject } from "./types/openapi_spec"
 
 /**
  * lodash/merge doesnt concat arrays so we need to do it manually
@@ -15,7 +15,7 @@ import { OpenAPIObject } from './types/openapi_spec';
  */
 function mergeCustomizer(objValue: string[], srcValue: string[]) {
   if (Array.isArray(objValue)) {
-    return objValue.concat(srcValue);
+    return objValue.concat(srcValue)
   }
 }
 
@@ -23,8 +23,8 @@ export const mergeSpecs = ({
   spec,
   partialSpec,
 }: {
-  spec: OpenAPIObject;
-  partialSpec: Partial<OpenAPIObject>;
+  spec: OpenAPIObject
+  partialSpec: Partial<OpenAPIObject>
 }): OpenAPIObject => {
-  return mergeWith(spec, partialSpec, mergeCustomizer);
-};
+  return mergeWith(spec, partialSpec, mergeCustomizer)
+}

@@ -16,30 +16,23 @@
 import fs from "fs/promises"
 import * as glob from "glob"
 import * as yaml from "js-yaml"
-import { OpenAPIObject } from "./types/openapi_spec"
 
-export const importYamlSpecFile = async ({
+export const importYamlFile = async <T>({
   fileName,
 }: {
   fileName: string
-}): Promise<Partial<OpenAPIObject>> => {
+}): Promise<T> => {
   const yamlContent = await fs.readFile(fileName, "utf8")
-  return yaml.load(yamlContent) as Partial<OpenAPIObject>
+  return yaml.load(yamlContent) as T
 }
 
-export const importJSONSpecFile = async ({
-  fileName,
-}: {
-  fileName: string
-}): Promise<OpenAPIObject> => JSON.parse(await fs.readFile(fileName, "utf-8"))
-
-export const getYamlFiles = () => {
-  return glob.glob.sync(`src/**/*.yaml`, {
+export const getFiles = ({ pattern }: { pattern: string }) => {
+  return glob.glob.sync(pattern, {
     root: process.cwd(),
   })
 }
 
-export const exportJsonSpecFile = async ({
+export const exportJsonFile = async ({
   fileName,
   content,
 }: {
