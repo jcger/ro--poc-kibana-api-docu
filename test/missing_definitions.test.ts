@@ -6,9 +6,14 @@
  * Side Public License, v 1.
  */
 import { describe, expect, it } from "vitest"
+import fs from "fs/promises"
+import yaml from "yaml"
 import { getMissingDefinitions } from "../src/index"
-import { importFile } from "../src/file_io"
-import { OpenAPIObject } from "../src/types/openapi_spec"
+
+export const importYamlContent = async ({ fileName }: { fileName: string }) => {
+  const yamlContent = await fs.readFile(fileName, "utf8")
+  return yaml.parse(yamlContent)
+}
 
 describe("missing definition", () => {
   it("finds missing definitions simple", () => {
@@ -37,9 +42,10 @@ describe("missing definition", () => {
   })
 
   it("finds missing definitions complex", async () => {
-    const spec = await importFile<OpenAPIObject>({
-      fileName: "test/fixtures/connectors/docs_entry_bundled.yaml",
+    const spec = await importYamlContent({
+      fileName: "test/fixtures/connectors/bundled.yaml",
     })
+
     expect(getMissingDefinitions({ spec })).toEqual({
       "#/components/schemas/config_properties_index": [
         "components.schemas.create_connector_request_index.properties.config.$ref",

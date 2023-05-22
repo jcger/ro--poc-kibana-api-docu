@@ -1,73 +1,96 @@
 import { describe, expect, it } from "vitest"
+import fs from "fs/promises"
+import yaml from "yaml"
 import { generateSpec } from "../src/index"
-import { importFile } from "../src/file_io"
 import { OpenAPIObject } from "../src/types/openapi_spec"
+
+export const importYamlContent = async ({ fileName }: { fileName: string }) => {
+  const yamlContent = await fs.readFile(fileName, "utf8")
+  return yaml.parse(yamlContent)
+}
 
 describe("generate spec", () => {
   it("generates spec simple", () => {
-    const spec: { [key in string]: any } = {
-      a: {
-        b: {
-          c: {
-            d: "#/components/schemas/existing",
+    const spec: OpenAPIObject = {
+      openapi: "3.0.1",
+      info: {
+        title: "Your API",
+        version: "1.0.0",
+      },
+      paths: {
+        "/example": {
+          post: {
+            summary: "Create a new example",
+            requestBody: {
+              required: true,
+              content: {
+                "application/json": {
+                  schema: {
+                    oneOf: [
+                      { $ref: "#/components/schemas/NewSchema" },
+                      { $ref: "#/components/schemas/AnotherSchema" },
+                    ],
+                  },
+                },
+              },
+            },
+            responses: {
+              "200": {
+                description: "OK",
+              },
+            },
           },
-        },
-        e: "#/components/schemas/missing",
-        f: {
-          g: "#/components/schemas/missing",
         },
       },
       components: {
         schemas: {
-          existing: "existing",
+          NewSchema: {
+            type: "object",
+            properties: {
+              email: {
+                type: "string",
+              },
+              age: {
+                type: "integer",
+              },
+            },
+            required: ["email"],
+          },
         },
       },
     }
 
     const partialSpec = {
-      missing: {
-        value: "not missing anymore",
+      AnotherSchema: {
+        type: "object",
+        properties: {
+          name: {
+            type: "string",
+          },
+          address: {
+            type: "string",
+          },
+        },
+        required: ["name"],
       },
     }
 
-    expect(generateSpec({ entryPointSpec: spec, partialSpec }))
-      .toMatchInlineSnapshot(`
-      {
-        "a": {
-          "b": {
-            "c": {
-              "d": "#/components/schemas/existing",
-            },
-          },
-          "e": "#/components/schemas/missing",
-          "f": {
-            "g": "#/components/schemas/missing",
-          },
-        },
-        "components": {
-          "schemas": {
-            "existing": "existing",
-            "missing": {
-              "value": "not missing anymore",
-            },
-          },
-        },
-      }
-    `)
+    expect(
+      generateSpec({ entryPointSpec: spec, partialSpec }),
+    ).toMatchSnapshot()
   })
 
   it("generates spec complex", async () => {
-    const spec: OpenAPIObject = await importFile({
-      fileName: "test/fixtures/connectors/docs_entry_bundled.yaml",
+    const spec = await importYamlContent({
+      fileName: "test/fixtures/connectors/bundled.yaml",
     })
 
-    const partialSpec: Partial<OpenAPIObject> = await importFile({
-      fileName:
-        "test/fixtures/connectors/index/docs_partial_config_properties_index.yaml",
+    const partialSpec: OpenAPIObject = await importYamlContent({
+      fileName: "test/fixtures/connectors/index/config_properties_index.yaml",
     })
 
     expect(
-      generateSpec({ entryPointSpec: spec, partialSpec })
+      generateSpec({ entryPointSpec: spec, partialSpec }),
     ).toMatchSnapshot()
   })
 })

@@ -1,3 +1,5 @@
+# @kbn-doc-linker partial
+
 config_properties_index:
   properties:
     config:
@@ -12,7 +14,7 @@ config_properties_index:
             detected.
           default: null
           type: string
-          nullable: true
+          nullable: true # test
         index:
           description: The Elasticsearch index to be written to.
           type: string

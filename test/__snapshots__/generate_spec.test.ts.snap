@@ -3388,7 +3388,6 @@ exports[`generate spec > generates spec complex 1`] = `
       },
     },
   },
-  "docsId": "connector",
   "info": {
     "contact": {
       "name": "Connectors Team",
@@ -4693,5 +4692,76 @@ exports[`generate spec > generates spec complex 1`] = `
       "name": "connectors",
     },
   ],
+}
+`;
+
+exports[`generate spec > generates spec simple 1`] = `
+{
+  "components": {
+    "schemas": {
+      "AnotherSchema": {
+        "properties": {
+          "address": {
+            "type": "string",
+          },
+          "name": {
+            "type": "string",
+          },
+        },
+        "required": [
+          "name",
+        ],
+        "type": "object",
+      },
+      "NewSchema": {
+        "properties": {
+          "age": {
+            "type": "integer",
+          },
+          "email": {
+            "type": "string",
+          },
+        },
+        "required": [
+          "email",
+        ],
+        "type": "object",
+      },
+    },
+  },
+  "info": {
+    "title": "Your API",
+    "version": "1.0.0",
+  },
+  "openapi": "3.0.1",
+  "paths": {
+    "/example": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/NewSchema",
+                  },
+                  {
+                    "$ref": "#/components/schemas/AnotherSchema",
+                  },
+                ],
+              },
+            },
+          },
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+          },
+        },
+        "summary": "Create a new example",
+      },
+    },
+  },
 }
 `;

@@ -1,3 +1,6 @@
+import { getFiles, importFileByTypes } from "./file_io"
+import { OpenAPIObject } from "./types/openapi_spec"
+
 /*
  * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
  * or more contributor license agreements. Licensed under the Elastic License
@@ -39,13 +42,13 @@ export const getMissingDefinitions = ({
   return missingDefinitions
 }
 
-export const generateSpec = <T extends { [key: string]: any }>({
+export const generateSpec = ({
   entryPointSpec,
   partialSpec,
 }: {
-  entryPointSpec: T
-  partialSpec: Partial<T>
-}) => {
+  entryPointSpec: OpenAPIObject
+  partialSpec: { [key: string]: any }
+}): OpenAPIObject => {
   const missingDefinitions = getMissingDefinitions({
     spec: entryPointSpec,
   })
@@ -67,4 +70,13 @@ export const generateSpec = <T extends { [key: string]: any }>({
   }
 
   return entryPointSpec
+}
+
+export const main = async () => {
+  const lala = importFileByTypes({
+    fileNames: getFiles({ pattern: "**/*.yaml" }),
+    types: ["entry", "partial"],
+  })
+
+  console.log(JSON.stringify(lala))
 }

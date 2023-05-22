@@ -1,4 +1,4 @@
-docsId: connector
+# @kbn-doc-linker entry
 openapi: 3.0.1
 info:
   title: Connectors
