@@ -73,10 +73,12 @@ export const generateSpec = ({
 }
 
 export const main = async () => {
-  const lala = importFileByTypes({
+  const output = await importFileByTypes({
     fileNames: getFiles({ pattern: "**/*.yaml" }),
     types: ["entry", "partial"],
   })
 
-  console.log(JSON.stringify(lala))
+  console.log(JSON.stringify(output))
 }
+
+main()
