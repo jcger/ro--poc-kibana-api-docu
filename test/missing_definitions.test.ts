@@ -7,7 +7,7 @@
  */
 import { describe, expect, it } from "vitest"
 import { getMissingDefinitions } from "../src/index"
-import { importYamlFile } from "../src/file_io"
+import { importFile } from "../src/file_io"
 import { OpenAPIObject } from "../src/types/openapi_spec"
 
 describe("missing definition", () => {
@@ -37,7 +37,7 @@ describe("missing definition", () => {
   })
 
   it("finds missing definitions complex", async () => {
-    const spec = await importYamlFile<OpenAPIObject>({
+    const spec = await importFile<OpenAPIObject>({
       fileName: "test/fixtures/connectors/docs_entry_bundled.yaml",
     })
     expect(getMissingDefinitions({ spec })).toEqual({

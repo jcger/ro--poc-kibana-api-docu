@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 import { generateSpec } from "../src/index"
-import { importYamlFile } from "../src/file_io"
+import { importFile } from "../src/file_io"
 import { OpenAPIObject } from "../src/types/openapi_spec"
 
 describe("generate spec", () => {
@@ -30,9 +30,8 @@ describe("generate spec", () => {
       },
     }
 
-    expect(
-      generateSpec({ entryPointSpec: spec, partialSpec }),
-    ).toMatchInlineSnapshot(`
+    expect(generateSpec({ entryPointSpec: spec, partialSpec }))
+      .toMatchInlineSnapshot(`
       {
         "a": {
           "b": {
@@ -58,17 +57,17 @@ describe("generate spec", () => {
   })
 
   it("generates spec complex", async () => {
-    const spec: OpenAPIObject = await importYamlFile({
+    const spec: OpenAPIObject = await importFile({
       fileName: "test/fixtures/connectors/docs_entry_bundled.yaml",
     })
 
-    const partialSpec: Partial<OpenAPIObject> = await importYamlFile({
+    const partialSpec: Partial<OpenAPIObject> = await importFile({
       fileName:
         "test/fixtures/connectors/index/docs_partial_config_properties_index.yaml",
     })
 
     expect(
-      generateSpec({ entryPointSpec: spec, partialSpec }),
-    ).toMatchFileSnapshot("./__snapshots__/output-0.json")
+      generateSpec({ entryPointSpec: spec, partialSpec })
+    ).toMatchSnapshot()
   })
 })

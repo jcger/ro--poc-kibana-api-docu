@@ -1,3 +1,6 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`generate spec > generates spec complex 1`] = `
 {
   "components": {
     "examples": {
@@ -315,11 +318,11 @@
             "comments": [
               {
                 "commentId": 1,
-                "pushedDate": 2022-09-08T16:52:27.865Z,
+                "pushedDate": "2022-09-08T16:52:27.865Z",
               },
             ],
             "id": "aKPmBHWzmdRQtx6Mx",
-            "pushedDate": 2022-09-08T16:52:27.866Z,
+            "pushedDate": "2022-09-08T16:52:27.866Z",
             "title": "TEST-457",
             "url": "https://elastic.swimlane.url.us/record/aNcL2xniGHGpa2AHb/aKPmBHWzmdRQtx6Mx",
           },
@@ -367,7 +370,7 @@
         },
       },
       "space_id": {
-        "description": "An identifier for the space. If `/s/` and the identifier are omitted from the path, the default space is used.",
+        "description": "An identifier for the space. If \`/s/\` and the identifier are omitted from the path, the default space is used.",
         "in": "path",
         "name": "spaceId",
         "required": true,
@@ -456,10 +459,10 @@
         "type": "object",
       },
       "config_properties_cases_webhook": {
-        "description": "Defines properties for connectors when type is `.cases-webhook`.",
+        "description": "Defines properties for connectors when type is \`.cases-webhook\`.",
         "properties": {
           "createCommentJson": {
-            "description": "A JSON payload sent to the create comment URL to create a case comment. You can use variables to add Kibana Cases data to the payload. The required variable is `case.comment`. Due to Mustache template variables (the text enclosed in triple braces, for example, `{{{case.title}}}`), the JSON is not validated when you create the connector. The JSON is validated once the Mustache variables have been placed when the REST method runs. Manually ensure that the JSON is valid, disregarding the Mustache variables, so the later validation will pass.
+            "description": "A JSON payload sent to the create comment URL to create a case comment. You can use variables to add Kibana Cases data to the payload. The required variable is \`case.comment\`. Due to Mustache template variables (the text enclosed in triple braces, for example, \`{{{case.title}}}\`), the JSON is not validated when you create the connector. The JSON is validated once the Mustache variables have been placed when the REST method runs. Manually ensure that the JSON is valid, disregarding the Mustache variables, so the later validation will pass.
 ",
             "example": {
               "body": {
@@ -470,7 +473,7 @@
           },
           "createCommentMethod": {
             "default": "put",
-            "description": "The REST API HTTP request method to create a case comment in the third-party system. Valid values are `patch`, `post`, and `put`.
+            "description": "The REST API HTTP request method to create a case comment in the third-party system. Valid values are \`patch\`, \`post\`, and \`put\`.
 ",
             "enum": [
               "patch",
@@ -480,13 +483,13 @@
             "type": "string",
           },
           "createCommentUrl": {
-            "description": "The REST API URL to create a case comment by ID in the third-party system. You can use a variable to add the external system ID to the URL. If you are using the `xpack.actions.allowedHosts setting`, add the hostname to the allowed hosts.
+            "description": "The REST API URL to create a case comment by ID in the third-party system. You can use a variable to add the external system ID to the URL. If you are using the \`xpack.actions.allowedHosts setting\`, add the hostname to the allowed hosts.
 ",
             "example": "https://testing-jira.atlassian.net/rest/api/2/issue/{{{external.system.id}}}/comment",
             "type": "string",
           },
           "createIncidentJson": {
-            "description": "A JSON payload sent to the create case URL to create a case. You can use variables to add case data to the payload. Required variables are `case.title` and `case.description`. Due to Mustache template variables (which is the text enclosed in triple braces, for example, `{{{case.title}}}`), the JSON is not validated when you create the connector. The JSON is validated after the Mustache variables have been placed when REST method runs. Manually ensure that the JSON is valid to avoid future validation errors; disregard Mustache variables during your review.
+            "description": "A JSON payload sent to the create case URL to create a case. You can use variables to add case data to the payload. Required variables are \`case.title\` and \`case.description\`. Due to Mustache template variables (which is the text enclosed in triple braces, for example, \`{{{case.title}}}\`), the JSON is not validated when you create the connector. The JSON is validated after the Mustache variables have been placed when REST method runs. Manually ensure that the JSON is valid to avoid future validation errors; disregard Mustache variables during your review.
 ",
             "example": {
               "fields": {
@@ -505,7 +508,7 @@
           },
           "createIncidentMethod": {
             "default": "post",
-            "description": "The REST API HTTP request method to create a case in the third-party system. Valid values are `patch`, `post`, and `put`.
+            "description": "The REST API HTTP request method to create a case in the third-party system. Valid values are \`patch\`, \`post\`, and \`put\`.
 ",
             "enum": [
               "patch",
@@ -519,7 +522,7 @@
             "type": "string",
           },
           "createIncidentUrl": {
-            "description": "The REST API URL to create a case in the third-party system. If you are using the `xpack.actions.allowedHosts` setting, add the hostname to the allowed hosts.
+            "description": "The REST API URL to create a case in the third-party system. If you are using the \`xpack.actions.allowedHosts\` setting, add the hostname to the allowed hosts.
 ",
             "type": "string",
           },
@@ -528,7 +531,7 @@
             "type": "string",
           },
           "getIncidentUrl": {
-            "description": "The REST API URL to get the case by ID from the third-party system. If you are using the `xpack.actions.allowedHosts` setting, add the hostname to the allowed hosts. You can use a variable to add the external system ID to the URL. Due to Mustache template variables (the text enclosed in triple braces, for example, `{{{case.title}}}`), the JSON is not validated when you create the connector. The JSON is validated after the Mustache variables have been placed when REST method runs. Manually ensure that the JSON is valid, disregarding the Mustache variables, so the later validation will pass.
+            "description": "The REST API URL to get the case by ID from the third-party system. If you are using the \`xpack.actions.allowedHosts\` setting, add the hostname to the allowed hosts. You can use a variable to add the external system ID to the URL. Due to Mustache template variables (the text enclosed in triple braces, for example, \`{{{case.title}}}\`), the JSON is not validated when you create the connector. The JSON is validated after the Mustache variables have been placed when REST method runs. Manually ensure that the JSON is valid, disregarding the Mustache variables, so the later validation will pass.
 ",
             "example": "https://testing-jira.atlassian.net/rest/api/2/issue/{{{external.system.id}}}",
             "type": "string",
@@ -544,7 +547,7 @@
             "type": "string",
           },
           "updateIncidentJson": {
-            "description": "The JSON payload sent to the update case URL to update the case. You can use variables to add Kibana Cases data to the payload. Required variables are `case.title` and `case.description`. Due to Mustache template variables (which is the text enclosed in triple braces, for example, `{{{case.title}}}`), the JSON is not validated when you create the connector. The JSON is validated after the Mustache variables have been placed when REST method runs. Manually ensure that the JSON is valid to avoid future validation errors; disregard Mustache variables during your review.
+            "description": "The JSON payload sent to the update case URL to update the case. You can use variables to add Kibana Cases data to the payload. Required variables are \`case.title\` and \`case.description\`. Due to Mustache template variables (which is the text enclosed in triple braces, for example, \`{{{case.title}}}\`), the JSON is not validated when you create the connector. The JSON is validated after the Mustache variables have been placed when REST method runs. Manually ensure that the JSON is valid to avoid future validation errors; disregard Mustache variables during your review.
 ",
             "example": {
               "fields": {
@@ -563,7 +566,7 @@
           },
           "updateIncidentMethod": {
             "default": "put",
-            "description": "The REST API HTTP request method to update the case in the third-party system. Valid values are `patch`, `post`, and `put`.
+            "description": "The REST API HTTP request method to update the case in the third-party system. Valid values are \`patch\`, \`post\`, and \`put\`.
 ",
             "enum": [
               "patch",
@@ -573,7 +576,7 @@
             "type": "string",
           },
           "updateIncidentUrl": {
-            "description": "The REST API URL to update the case by ID in the third-party system. You can use a variable to add the external system ID to the URL. If you are using the `xpack.actions.allowedHosts` setting, add the hostname to the allowed hosts.
+            "description": "The REST API URL to update the case by ID in the third-party system. You can use a variable to add the external system ID to the URL. If you are using the \`xpack.actions.allowedHosts\` setting, add the hostname to the allowed hosts.
 ",
             "example": "https://testing-jira.atlassian.net/rest/api/2/issue/{{{external.system.ID}}}",
             "type": "string",
@@ -600,14 +603,14 @@
       },
       "config_properties_email": {
         "additionalProperties": true,
-        "description": "Defines properties for connectors when type is `.email`.",
+        "description": "Defines properties for connectors when type is \`.email\`.",
         "title": "Connector request properties for an email connector",
         "type": "object",
       },
       "config_properties_index": {
         "properties": {
           "config": {
-            "description": "Defines properties for connectors when type is `.index`.",
+            "description": "Defines properties for connectors when type is \`.index\`.",
             "properties": {
               "executionTimeField": {
                 "default": null,
@@ -635,7 +638,7 @@
         },
       },
       "config_properties_jira": {
-        "description": "Defines properties for connectors when type is `.jira`.",
+        "description": "Defines properties for connectors when type is \`.jira\`.",
         "properties": {
           "apiUrl": {
             "description": "The Jira instance URL.",
@@ -654,10 +657,10 @@
         "type": "object",
       },
       "config_properties_opsgenie": {
-        "description": "Defines properties for connectors when type is `.opsgenie`.",
+        "description": "Defines properties for connectors when type is \`.opsgenie\`.",
         "properties": {
           "apiUrl": {
-            "description": "The Opsgenie URL. For example, `https://api.opsgenie.com` or `https://api.eu.opsgenie.com`. If you are using the `xpack.actions.allowedHosts` setting, add the hostname to the allowed hosts.
+            "description": "The Opsgenie URL. For example, \`https://api.opsgenie.com\` or \`https://api.eu.opsgenie.com\`. If you are using the \`xpack.actions.allowedHosts\` setting, add the hostname to the allowed hosts.
 ",
             "type": "string",
           },
@@ -670,12 +673,12 @@
       },
       "config_properties_pagerduty": {
         "additionalProperties": true,
-        "description": "Defines properties for connectors when type is `.pagerduty`.",
+        "description": "Defines properties for connectors when type is \`.pagerduty\`.",
         "title": "Connector request properties for a PagerDuty connector",
         "type": "object",
       },
       "config_properties_resilient": {
-        "description": "Defines properties for connectors when type is `.resilient`.",
+        "description": "Defines properties for connectors when type is \`.resilient\`.",
         "properties": {
           "apiUrl": {
             "description": "The IBM Resilient instance URL.",
@@ -694,14 +697,14 @@
         "type": "object",
       },
       "config_properties_servicenow": {
-        "description": "Defines properties for connectors when type is `.servicenow`.",
+        "description": "Defines properties for connectors when type is \`.servicenow\`.",
         "properties": {
           "apiUrl": {
             "description": "The ServiceNow instance URL.",
             "type": "string",
           },
           "clientId": {
-            "description": "The client ID assigned to your OAuth application. This property is required when `isOAuth` is `true`.
+            "description": "The client ID assigned to your OAuth application. This property is required when \`isOAuth\` is \`true\`.
 ",
             "type": "string",
           },
@@ -712,18 +715,18 @@
             "type": "boolean",
           },
           "jwtKeyId": {
-            "description": "The key identifier assigned to the JWT verifier map of your OAuth application. This property is required when `isOAuth` is `true`.
+            "description": "The key identifier assigned to the JWT verifier map of your OAuth application. This property is required when \`isOAuth\` is \`true\`.
 ",
             "type": "string",
           },
           "userIdentifierValue": {
-            "description": "The identifier to use for OAuth authentication. This identifier should be the user field you selected when you created an OAuth JWT API endpoint for external clients in your ServiceNow instance. For example, if the selected user field is `Email`, the user identifier should be the user's email address. This property is required when `isOAuth` is `true`.
+            "description": "The identifier to use for OAuth authentication. This identifier should be the user field you selected when you created an OAuth JWT API endpoint for external clients in your ServiceNow instance. For example, if the selected user field is \`Email\`, the user identifier should be the user's email address. This property is required when \`isOAuth\` is \`true\`.
 ",
             "type": "string",
           },
           "usesTableApi": {
             "default": true,
-            "description": "Determines whether the connector uses the Table API or the Import Set API. This property is supported only for ServiceNow ITSM and ServiceNow SecOps connectors.  NOTE: If this property is set to `false`, the Elastic application should be installed in ServiceNow.
+            "description": "Determines whether the connector uses the Table API or the Import Set API. This property is supported only for ServiceNow ITSM and ServiceNow SecOps connectors.  NOTE: If this property is set to \`false\`, the Elastic application should be installed in ServiceNow.
 ",
             "type": "boolean",
           },
@@ -735,14 +738,14 @@
         "type": "object",
       },
       "config_properties_servicenow_itom": {
-        "description": "Defines properties for connectors when type is `.servicenow`.",
+        "description": "Defines properties for connectors when type is \`.servicenow\`.",
         "properties": {
           "apiUrl": {
             "description": "The ServiceNow instance URL.",
             "type": "string",
           },
           "clientId": {
-            "description": "The client ID assigned to your OAuth application. This property is required when `isOAuth` is `true`.
+            "description": "The client ID assigned to your OAuth application. This property is required when \`isOAuth\` is \`true\`.
 ",
             "type": "string",
           },
@@ -753,12 +756,12 @@
             "type": "boolean",
           },
           "jwtKeyId": {
-            "description": "The key identifier assigned to the JWT verifier map of your OAuth application. This property is required when `isOAuth` is `true`.
+            "description": "The key identifier assigned to the JWT verifier map of your OAuth application. This property is required when \`isOAuth\` is \`true\`.
 ",
             "type": "string",
           },
           "userIdentifierValue": {
-            "description": "The identifier to use for OAuth authentication. This identifier should be the user field you selected when you created an OAuth JWT API endpoint for external clients in your ServiceNow instance. For example, if the selected user field is `Email`, the user identifier should be the user's email address. This property is required when `isOAuth` is `true`.
+            "description": "The identifier to use for OAuth authentication. This identifier should be the user field you selected when you created an OAuth JWT API endpoint for external clients in your ServiceNow instance. For example, if the selected user field is \`Email\`, the user identifier should be the user's email address. This property is required when \`isOAuth\` is \`true\`.
 ",
             "type": "string",
           },
@@ -770,7 +773,7 @@
         "type": "object",
       },
       "config_properties_swimlane": {
-        "description": "Defines properties for connectors when type is `.swimlane`.",
+        "description": "Defines properties for connectors when type is \`.swimlane\`.",
         "properties": {
           "apiUrl": {
             "description": "The Swimlane instance URL.",
@@ -781,7 +784,7 @@
             "type": "string",
           },
           "connectorType": {
-            "description": "The type of connector. Valid values are `all`, `alerts`, and `cases`.",
+            "description": "The type of connector. Valid values are \`all\`, \`alerts\`, and \`cases\`.",
             "enum": [
               "all",
               "alerts",
@@ -1010,19 +1013,19 @@
       },
       "config_properties_tines": {
         "additionalProperties": true,
-        "description": "Defines properties for connectors when type is `.tines`.",
+        "description": "Defines properties for connectors when type is \`.tines\`.",
         "title": "Connector request properties for a Tines connector",
         "type": "object",
       },
       "config_properties_webhook": {
         "additionalProperties": true,
-        "description": "Defines properties for connectors when type is `.webhook`.",
+        "description": "Defines properties for connectors when type is \`.webhook\`.",
         "title": "Connector request properties for a Webhook connector",
         "type": "object",
       },
       "config_properties_xmatters": {
         "additionalProperties": true,
-        "description": "Defines properties for connectors when type is `.xmatters`.",
+        "description": "Defines properties for connectors when type is \`.xmatters\`.",
         "title": "Connector request properties for a xMatters connector",
         "type": "object",
       },
@@ -1777,7 +1780,7 @@
         "type": "object",
       },
       "connector_types": {
-        "description": "The type of connector. For example, `.email`, `.index`, `.jira`, `.opsgenie`, or `.server-log`.",
+        "description": "The type of connector. For example, \`.email\`, \`.index\`, \`.jira\`, \`.opsgenie\`, or \`.server-log\`.",
         "enum": [
           ".cases-webhook",
           ".email",
@@ -2334,7 +2337,7 @@
         "type": "object",
       },
       "features": {
-        "description": "The feature that uses the connector. Valid values are `alerting`, `cases`, `uptime`, and `siem`.
+        "description": "The feature that uses the connector. Valid values are \`alerting\`, \`cases\`, \`uptime\`, and \`siem\`.
 ",
         "enum": [
           "alerting",
@@ -2355,7 +2358,7 @@
         "type": "boolean",
       },
       "is_preconfigured": {
-        "description": "Indicates whether it is a preconfigured connector. If true, the `config` and `is_missing_secrets` properties are omitted from the response.",
+        "description": "Indicates whether it is a preconfigured connector. If true, the \`config\` and \`is_missing_secrets\` properties are omitted from the response.",
         "example": false,
         "type": "boolean",
       },
@@ -2405,7 +2408,7 @@
         "type": "object",
       },
       "run_connector_subaction_addevent": {
-        "description": "The `addEvent` subaction for ServiceNow ITOM connectors.",
+        "description": "The \`addEvent\` subaction for ServiceNow ITOM connectors.",
         "properties": {
           "subAction": {
             "description": "The action to test.",
@@ -2430,7 +2433,7 @@
                 "type": "string",
               },
               "message_key": {
-                "description": "All actions sharing this key are associated with the same ServiceNow alert. The default value is `<rule ID>:<alert instance ID>`.",
+                "description": "All actions sharing this key are associated with the same ServiceNow alert. The default value is \`<rule ID>:<alert instance ID>\`.",
                 "type": "string",
               },
               "metric_name": {
@@ -2472,7 +2475,7 @@
         "type": "object",
       },
       "run_connector_subaction_closealert": {
-        "description": "The `closeAlert` subaction for Opsgenie connectors.",
+        "description": "The \`closeAlert\` subaction for Opsgenie connectors.",
         "properties": {
           "subAction": {
             "description": "The action to test.",
@@ -2514,7 +2517,7 @@
         "type": "object",
       },
       "run_connector_subaction_createalert": {
-        "description": "The `createAlert` subaction for Opsgenie connectors.",
+        "description": "The \`createAlert\` subaction for Opsgenie connectors.",
         "properties": {
           "subAction": {
             "description": "The action to test.",
@@ -2573,7 +2576,7 @@
                 "type": "string",
               },
               "responders": {
-                "description": "The entities to receive notifications about the alert. If `type` is `user`, either `id` or `username` is required. If `type` is `team`, either `id` or `name` is required.
+                "description": "The entities to receive notifications about the alert. If \`type\` is \`user\`, either \`id\` or \`username\` is required. If \`type\` is \`team\`, either \`id\` or \`name\` is required.
 ",
                 "items": {
                   "properties": {
@@ -2586,7 +2589,7 @@
                       "type": "string",
                     },
                     "type": {
-                      "description": "The type of responders, in this case `escalation`.",
+                      "description": "The type of responders, in this case \`escalation\`.",
                       "enum": [
                         "escalation",
                         "schedule",
@@ -2620,7 +2623,7 @@
                 "type": "string",
               },
               "visibleTo": {
-                "description": "The teams and users that the alert will be visible to without sending a notification. Only one of `id`, `name`, or `username` is required.",
+                "description": "The teams and users that the alert will be visible to without sending a notification. Only one of \`id\`, \`name\`, or \`username\` is required.",
                 "items": {
                   "properties": {
                     "id": {
@@ -2632,7 +2635,7 @@
                       "type": "string",
                     },
                     "type": {
-                      "description": "Valid values are `team` and `user`.",
+                      "description": "Valid values are \`team\` and \`user\`.",
                       "enum": [
                         "team",
                         "user",
@@ -2640,7 +2643,7 @@
                       "type": "string",
                     },
                     "username": {
-                      "description": "The user name. This property is required only when the `type` is `user`.",
+                      "description": "The user name. This property is required only when the \`type\` is \`user\`.",
                       "type": "string",
                     },
                   },
@@ -2666,7 +2669,7 @@
         "type": "object",
       },
       "run_connector_subaction_fieldsbyissuetype": {
-        "description": "The `fieldsByIssueType` subaction for Jira connectors.",
+        "description": "The \`fieldsByIssueType\` subaction for Jira connectors.",
         "properties": {
           "subAction": {
             "description": "The action to test.",
@@ -2697,7 +2700,7 @@
         "type": "object",
       },
       "run_connector_subaction_getchoices": {
-        "description": "The `getChoices` subaction for ServiceNow ITOM, ServiceNow ITSM, and ServiceNow SecOps connectors.",
+        "description": "The \`getChoices\` subaction for ServiceNow ITOM, ServiceNow ITSM, and ServiceNow SecOps connectors.",
         "properties": {
           "subAction": {
             "description": "The action to test.",
@@ -2731,7 +2734,7 @@
         "type": "object",
       },
       "run_connector_subaction_getfields": {
-        "description": "The `getFields` subaction for Jira, ServiceNow ITSM, and ServiceNow SecOps connectors.",
+        "description": "The \`getFields\` subaction for Jira, ServiceNow ITSM, and ServiceNow SecOps connectors.",
         "properties": {
           "subAction": {
             "description": "The action to test.",
@@ -2748,7 +2751,7 @@
         "type": "object",
       },
       "run_connector_subaction_getincident": {
-        "description": "The `getIncident` subaction for Jira, ServiceNow ITSM, and ServiceNow SecOps connectors.",
+        "description": "The \`getIncident\` subaction for Jira, ServiceNow ITSM, and ServiceNow SecOps connectors.",
         "properties": {
           "subAction": {
             "description": "The action to test.",
@@ -2779,7 +2782,7 @@
         "type": "object",
       },
       "run_connector_subaction_issue": {
-        "description": "The `issue` subaction for Jira connectors.",
+        "description": "The \`issue\` subaction for Jira connectors.",
         "properties": {
           "subAction": {
             "description": "The action to test.",
@@ -2809,7 +2812,7 @@
         "type": "object",
       },
       "run_connector_subaction_issues": {
-        "description": "The `issues` subaction for Jira connectors.",
+        "description": "The \`issues\` subaction for Jira connectors.",
         "properties": {
           "subAction": {
             "description": "The action to test.",
@@ -2839,7 +2842,7 @@
         "type": "object",
       },
       "run_connector_subaction_issuetypes": {
-        "description": "The `issueTypes` subaction for Jira connectors.",
+        "description": "The \`issueTypes\` subaction for Jira connectors.",
         "properties": {
           "subAction": {
             "description": "The action to test.",
@@ -2856,7 +2859,7 @@
         "type": "object",
       },
       "run_connector_subaction_pushtoservice": {
-        "description": "The `pushToService` subaction for Jira, ServiceNow ITSM, ServiceNow SecOps, and Swimlane connectors.",
+        "description": "The \`pushToService\` subaction for Jira, ServiceNow ITSM, ServiceNow SecOps, and Swimlane connectors.",
         "properties": {
           "subAction": {
             "description": "The action to test.",
@@ -2909,7 +2912,7 @@
                     "type": "string",
                   },
                   "correlation_id": {
-                    "description": "The correlation identifier for the security incident for ServiceNow ITSM and ServiveNow SecOps connectors. Connectors using the same correlation ID are associated with the same ServiceNow incident. This value determines whether a new ServiceNow incident is created or an existing one is updated. Modifying this value is optional; if not modified, the rule ID and alert ID are combined as `{{ruleID}}:{{alert ID}}` to form the correlation ID value in ServiceNow. The maximum character length for this value is 100 characters. NOTE: Using the default configuration of `{{ruleID}}:{{alert ID}}` ensures that ServiceNow creates a separate incident record for every generated alert that uses a unique alert ID. If the rule generates multiple alerts that use the same alert IDs, ServiceNow creates and continually updates a single incident record for the alert.
+                    "description": "The correlation identifier for the security incident for ServiceNow ITSM and ServiveNow SecOps connectors. Connectors using the same correlation ID are associated with the same ServiceNow incident. This value determines whether a new ServiceNow incident is created or an existing one is updated. Modifying this value is optional; if not modified, the rule ID and alert ID are combined as \`{{ruleID}}:{{alert ID}}\` to form the correlation ID value in ServiceNow. The maximum character length for this value is 100 characters. NOTE: Using the default configuration of \`{{ruleID}}:{{alert ID}}\` ensures that ServiceNow creates a separate incident record for every generated alert that uses a unique alert ID. If the rule generates multiple alerts that use the same alert IDs, ServiceNow creates and continually updates a single incident record for the alert.
 ",
                     "type": "string",
                   },
@@ -2942,7 +2945,7 @@
                     "type": "string",
                   },
                   "issueType": {
-                    "description": "The type of incident for Jira connectors. For example, 10006. To obtain the list of valid values, set `subAction` to `issueTypes`.",
+                    "description": "The type of incident for Jira connectors. For example, 10006. To obtain the list of valid values, set \`subAction\` to \`issueTypes\`.",
                     "type": "integer",
                   },
                   "labels": {
@@ -2983,7 +2986,7 @@
                     "type": "string",
                   },
                   "parent": {
-                    "description": "The ID or key of the parent issue for Jira connectors. Applies only to `Sub-task` types of issues.",
+                    "description": "The ID or key of the parent issue for Jira connectors. Applies only to \`Sub-task\` types of issues.",
                     "type": "string",
                   },
                   "priority": {
@@ -3051,11 +3054,11 @@
       "secrets_properties_cases_webhook": {
         "properties": {
           "password": {
-            "description": "The password for HTTP basic authentication. If `hasAuth` is set to `true`, this property is required.",
+            "description": "The password for HTTP basic authentication. If \`hasAuth\` is set to \`true\`, this property is required.",
             "type": "string",
           },
           "user": {
-            "description": "The username for HTTP basic authentication. If `hasAuth` is set to `true`, this property is required.",
+            "description": "The username for HTTP basic authentication. If \`hasAuth\` is set to \`true\`, this property is required.",
             "type": "string",
           },
         },
@@ -3064,12 +3067,12 @@
       },
       "secrets_properties_email": {
         "additionalProperties": true,
-        "description": "Defines secrets for connectors when type is `.email`.",
+        "description": "Defines secrets for connectors when type is \`.email\`.",
         "title": "Connector secrets properties for an email connector",
         "type": "object",
       },
       "secrets_properties_jira": {
-        "description": "Defines secrets for connectors when type is `.jira`.",
+        "description": "Defines secrets for connectors when type is \`.jira\`.",
         "properties": {
           "apiToken": {
             "description": "The Jira API authentication token for HTTP basic authentication.",
@@ -3088,7 +3091,7 @@
         "type": "object",
       },
       "secrets_properties_opsgenie": {
-        "description": "Defines secrets for connectors when type is `.opsgenie`.",
+        "description": "Defines secrets for connectors when type is \`.opsgenie\`.",
         "properties": {
           "apiKey": {
             "description": "The Opsgenie API authentication key for HTTP Basic authentication.",
@@ -3103,12 +3106,12 @@
       },
       "secrets_properties_pagerduty": {
         "additionalProperties": true,
-        "description": "Defines secrets for connectors when type is `.pagerduty`.",
+        "description": "Defines secrets for connectors when type is \`.pagerduty\`.",
         "title": "Connector secrets properties for a PagerDuty connector",
         "type": "object",
       },
       "secrets_properties_resilient": {
-        "description": "Defines secrets for connectors when type is `.resilient`.",
+        "description": "Defines secrets for connectors when type is \`.resilient\`.",
         "properties": {
           "apiKeyId": {
             "description": "The authentication key ID for HTTP Basic authentication.",
@@ -3127,26 +3130,26 @@
         "type": "object",
       },
       "secrets_properties_servicenow": {
-        "description": "Defines secrets for connectors when type is `.servicenow`, `.servicenow-sir`, or `.servicenow-itom`.",
+        "description": "Defines secrets for connectors when type is \`.servicenow\`, \`.servicenow-sir\`, or \`.servicenow-itom\`.",
         "properties": {
           "clientSecret": {
-            "description": "The client secret assigned to your OAuth application. This property is required when `isOAuth` is `true`.",
+            "description": "The client secret assigned to your OAuth application. This property is required when \`isOAuth\` is \`true\`.",
             "type": "string",
           },
           "password": {
-            "description": "The password for HTTP basic authentication. This property is required when `isOAuth` is `false`.",
+            "description": "The password for HTTP basic authentication. This property is required when \`isOAuth\` is \`false\`.",
             "type": "string",
           },
           "privateKey": {
-            "description": "The RSA private key that you created for use in ServiceNow. This property is required when `isOAuth` is `true`.",
+            "description": "The RSA private key that you created for use in ServiceNow. This property is required when \`isOAuth\` is \`true\`.",
             "type": "string",
           },
           "privateKeyPassword": {
-            "description": "The password for the RSA private key. This property is required when `isOAuth` is `true` and you set a password on your private key.",
+            "description": "The password for the RSA private key. This property is required when \`isOAuth\` is \`true\` and you set a password on your private key.",
             "type": "string",
           },
           "username": {
-            "description": "The username for HTTP basic authentication. This property is required when `isOAuth` is `false`.",
+            "description": "The username for HTTP basic authentication. This property is required when \`isOAuth\` is \`false\`.",
             "type": "string",
           },
         },
@@ -3155,12 +3158,12 @@
       },
       "secrets_properties_slack": {
         "additionalProperties": true,
-        "description": "Defines secrets for connectors when type is `.slack`.",
+        "description": "Defines secrets for connectors when type is \`.slack\`.",
         "title": "Connector secrets properties for a Slack connector",
         "type": "object",
       },
       "secrets_properties_swimlane": {
-        "description": "Defines secrets for connectors when type is `.swimlane`.",
+        "description": "Defines secrets for connectors when type is \`.swimlane\`.",
         "properties": {
           "apiToken": {
             "description": "Swimlane API authentication token.",
@@ -3172,25 +3175,25 @@
       },
       "secrets_properties_teams": {
         "additionalProperties": true,
-        "description": "Defines secrets for connectors when type is `.teams`.",
+        "description": "Defines secrets for connectors when type is \`.teams\`.",
         "title": "Connector secrets properties for a Microsoft Teams connector",
         "type": "object",
       },
       "secrets_properties_tines": {
         "additionalProperties": true,
-        "description": "Defines secrets for connectors when type is `.tines`.",
+        "description": "Defines secrets for connectors when type is \`.tines\`.",
         "title": "Connector secrets properties for a Tines connector",
         "type": "object",
       },
       "secrets_properties_webhook": {
         "additionalProperties": true,
-        "description": "Defines secrets for connectors when type is `.webhook`.",
+        "description": "Defines secrets for connectors when type is \`.webhook\`.",
         "title": "Connector secrets properties for a Webhook connector",
         "type": "object",
       },
       "secrets_properties_xmatters": {
         "additionalProperties": true,
-        "description": "Defines secrets for connectors when type is `.xmatters`.",
+        "description": "Defines secrets for connectors when type is \`.xmatters\`.",
         "title": "Connector secrets properties for an xMatters connector",
         "type": "object",
       },
@@ -3792,7 +3795,7 @@
     },
     "/s/{spaceId}/api/actions/connector": {
       "post": {
-        "description": "You must have `all` privileges for the **Actions and Connectors** feature in the **Management** section of the Kibana feature privileges.
+        "description": "You must have \`all\` privileges for the **Actions and Connectors** feature in the **Management** section of the Kibana feature privileges.
 ",
         "operationId": "createConnector",
         "parameters": [
@@ -3920,7 +3923,7 @@
     },
     "/s/{spaceId}/api/actions/connector/{connectorId}": {
       "delete": {
-        "description": "You must have `all` privileges for the **Actions and Connectors** feature in the **Management** section of the Kibana feature privileges. WARNING: When you delete a connector, it cannot be recovered.
+        "description": "You must have \`all\` privileges for the **Actions and Connectors** feature in the **Management** section of the Kibana feature privileges. WARNING: When you delete a connector, it cannot be recovered.
 ",
         "operationId": "deleteConnector",
         "parameters": [
@@ -3984,7 +3987,7 @@
         ],
       },
       "get": {
-        "description": "You must have `read` privileges for the **Actions and Connectors** feature in the **Management** section of the Kibana feature privileges.
+        "description": "You must have \`read\` privileges for the **Actions and Connectors** feature in the **Management** section of the Kibana feature privileges.
 ",
         "operationId": "getConnector",
         "parameters": [
@@ -4057,7 +4060,7 @@
         ],
       },
       "put": {
-        "description": "You must have `all` privileges for the **Actions and Connectors** feature in the **Management** section of the Kibana feature privileges.
+        "description": "You must have \`all\` privileges for the **Actions and Connectors** feature in the **Management** section of the Kibana feature privileges.
 ",
         "operationId": "updateConnector",
         "parameters": [
@@ -4190,7 +4193,7 @@
     },
     "/s/{spaceId}/api/actions/connector/{connectorId}/_execute": {
       "post": {
-        "description": "You can use this API to test an action that involves interaction with Kibana services or integrations with third-party systems. You must have `read` privileges for the **Actions and Connectors** feature in the **Management** section of the Kibana feature privileges. If you use an index connector, you must also have `all`, `create`, `index`, or `write` indices privileges.
+        "description": "You can use this API to test an action that involves interaction with Kibana services or integrations with third-party systems. You must have \`read\` privileges for the **Actions and Connectors** feature in the **Management** section of the Kibana feature privileges. If you use an index connector, you must also have \`all\`, \`create\`, \`index\`, or \`write\` indices privileges.
 ",
         "operationId": "runConnector",
         "parameters": [
@@ -4416,7 +4419,7 @@
                         "type": "boolean",
                       },
                       "enabled_in_config": {
-                        "description": "Indicates whether the connector type is enabled in the Kibana `.yml` file.",
+                        "description": "Indicates whether the connector type is enabled in the Kibana \`.yml\` file.",
                         "example": true,
                         "type": "boolean",
                       },
@@ -4489,7 +4492,7 @@
     },
     "/s/{spaceId}/api/actions/connectors": {
       "get": {
-        "description": "You must have `read` privileges for the **Actions and Connectors** feature in the **Management** section of the Kibana feature privileges.
+        "description": "You must have \`read\` privileges for the **Actions and Connectors** feature in the **Management** section of the Kibana feature privileges.
 ",
         "operationId": "getConnectors",
         "parameters": [
@@ -4540,7 +4543,7 @@
                       },
                       "referenced_by_count": {
                         "default": 0,
-                        "description": "Indicates the number of saved objects that reference the connector. If `is_preconfigured` is true, this value is not calculated.",
+                        "description": "Indicates the number of saved objects that reference the connector. If \`is_preconfigured\` is true, this value is not calculated.",
                         "example": 2,
                         "type": "integer",
                       },
@@ -4612,7 +4615,7 @@
                         "type": "boolean",
                       },
                       "enabledInConfig": {
-                        "description": "Indicates whether the connector type is enabled in the Kibana `.yml` file.",
+                        "description": "Indicates whether the connector type is enabled in the Kibana \`.yml\` file.",
                         "type": "boolean",
                       },
                       "enabledInLicense": {
@@ -4691,3 +4694,4 @@
     },
   ],
 }
+`;

@@ -15,15 +15,15 @@
 
 import fs from "fs/promises"
 import * as glob from "glob"
-import * as yaml from "js-yaml"
+import * as yaml from "yaml"
 
-export const importYamlFile = async <T>({
+export const importFile = async <T>({
   fileName,
 }: {
   fileName: string
 }): Promise<T> => {
   const yamlContent = await fs.readFile(fileName, "utf8")
-  return yaml.load(yamlContent) as T
+  return yaml.parse(yamlContent) as T
 }
 
 export const getFiles = ({ pattern }: { pattern: string }) => {
@@ -32,7 +32,7 @@ export const getFiles = ({ pattern }: { pattern: string }) => {
   })
 }
 
-export const exportJsonFile = async ({
+export const exportFile = async ({
   fileName,
   content,
 }: {
