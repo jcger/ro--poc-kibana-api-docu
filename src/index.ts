@@ -96,31 +96,24 @@ export const getSpecs = async ({
     types: ["entry", "partial"],
   })
 
-  const specs = entry.map(
-    ({
-      spec: entrySpec,
+  const specs = Object.keys(entry).map((fileName: string) => {
+    const entrySpec = entry[fileName]
+    return {
+      spec: partial.reduce(
+        (
+          acc: OpenAPIObject,
+          { spec: partialSpec }: { spec: Partial<OpenAPIObject> },
+        ) => {
+          return generateSpec({
+            entryPointSpec: acc,
+            partialSpec: partialSpec,
+          })
+        },
+        entrySpec,
+      ),
       fileName,
-    }: {
-      spec: OpenAPIObject
-      fileName: string
-    }) => {
-      return {
-        spec: partial.reduce(
-          (
-            acc: OpenAPIObject,
-            { spec: partialSpec }: { spec: Partial<OpenAPIObject> },
-          ) => {
-            return generateSpec({
-              entryPointSpec: acc,
-              partialSpec: partialSpec,
-            })
-          },
-          entrySpec,
-        ),
-        fileName,
-      }
-    },
-  )
+    }
+  })
 
   return specs
 }

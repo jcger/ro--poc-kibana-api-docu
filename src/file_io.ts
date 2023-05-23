@@ -16,47 +16,32 @@ const parseYamlFile = async ({ fileName }: { fileName: string }) => {
   return yaml.parseDocument(yamlContent)
 }
 
+type ImportFileByTypesParams = {
+  fileNames: string[]
+  types: string[]
+}
 export const importFileByTypes = async ({
   fileNames,
   types,
-}: {
-  fileNames: string[]
-  types: string[]
-}) => {
-  const yamlContent = await Promise.all(
-    fileNames.map(async (fileName) => {
-      return {
-        doc: await parseYamlFile({ fileName }),
-        fileName,
-      }
-    }),
+}: ImportFileByTypesParams) => {
+  const yamlContents = await Promise.all(
+    fileNames.map((fileName: string) => parseYamlFile({ fileName })),
   )
 
-  const parsedYaml = yamlContent
-    .filter(({ doc }) => doc.commentBefore?.includes("@kbn-doc-linker"))
-    .reduce(
-      (
-        acc: any,
-        {
-          doc,
-          fileName,
-        }: { doc: yaml.Document.Parsed<yaml.ParsedNode>; fileName: string },
-      ) => {
-        types.forEach((type) => {
-          if (doc.commentBefore?.includes(type)) {
-            if (!acc[type]) acc[type] = []
-            acc[type].push({
-              spec: doc.toJSON(),
-              fileName,
-            })
-          }
-        })
-        return acc
-      },
-      {},
-    )
+  return fileNames.reduce((acc, fileName: string, index: number) => {
+    const doc = yamlContents[index]
 
-  return parsedYaml
+    if (!doc.commentBefore?.includes("@kbn-doc-linker")) return acc
+
+    types.forEach((type) => {
+      if (doc.commentBefore?.includes(type)) {
+        if (!acc[type]) acc[type] = {}
+        acc[type][fileName] = doc.toJSON()
+      }
+    })
+
+    return acc
+  }, {} as { [key: string]: any })
 }
 
 export const getFiles = ({
