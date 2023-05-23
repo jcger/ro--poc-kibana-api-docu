@@ -82,11 +82,11 @@ describe("generate spec", () => {
 
   it("generates spec complex", async () => {
     const spec = await importYamlContent({
-      fileName: "test/fixtures/connectors/bundled.yaml",
+      fileName: "openapi/connectors/bundled.yaml",
     })
 
     const partialSpec: OpenAPIObject = await importYamlContent({
-      fileName: "test/fixtures/connectors/index/config_properties_index.yaml",
+      fileName: "openapi/connectors/index/config_properties_index.yaml",
     })
 
     expect(

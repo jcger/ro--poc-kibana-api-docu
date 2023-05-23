@@ -73,12 +73,24 @@ export const generateSpec = ({
 }
 
 export const main = async () => {
-  const output = await importFileByTypes({
+  const { entry, partial } = await importFileByTypes({
     fileNames: getFiles({ pattern: "**/*.yaml" }),
     types: ["entry", "partial"],
   })
 
-  console.log(JSON.stringify(output))
+  const specs = entry.map((entrySpec: OpenAPIObject) => {
+    return Object.assign(
+      {},
+      ...partial.map((partialSpec: Partial<OpenAPIObject>) =>
+        generateSpec({
+          entryPointSpec: entrySpec,
+          partialSpec: partialSpec,
+        }),
+      ),
+    )
+  })
+
+  return specs
 }
 
 main()

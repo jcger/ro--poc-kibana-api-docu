@@ -43,7 +43,7 @@ describe("missing definition", () => {
 
   it("finds missing definitions complex", async () => {
     const spec = await importYamlContent({
-      fileName: "test/fixtures/connectors/bundled.yaml",
+      fileName: "openapi/connectors/bundled.yaml",
     })
 
     expect(getMissingDefinitions({ spec })).toEqual({
