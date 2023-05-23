@@ -380,53 +380,80 @@ exports[`generate spec > generates spec complex 1`] = `
         },
       },
     },
+    "responses": {
+      "200_actions": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/action_response_properties",
+            },
+          },
+        },
+        "description": "Indicates a successful call.",
+      },
+      "401": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "error": {
+                  "enum": [
+                    "Unauthorized",
+                  ],
+                  "example": "Unauthorized",
+                  "type": "string",
+                },
+                "message": {
+                  "type": "string",
+                },
+                "statusCode": {
+                  "enum": [
+                    401,
+                  ],
+                  "example": 401,
+                  "type": "integer",
+                },
+              },
+              "title": "Unauthorized response",
+              "type": "object",
+            },
+          },
+        },
+        "description": "Authorization information is missing or invalid.",
+      },
+      "404": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "error": {
+                  "enum": [
+                    "Not Found",
+                  ],
+                  "example": "Not Found",
+                  "type": "string",
+                },
+                "message": {
+                  "example": "Saved object [action/baf33fc0-920c-11ed-b36a-874bd1548a00] not found",
+                  "type": "string",
+                },
+                "statusCode": {
+                  "enum": [
+                    404,
+                  ],
+                  "example": 404,
+                  "type": "integer",
+                },
+              },
+              "title": "Not found response",
+              "type": "object",
+            },
+          },
+        },
+        "description": "Object is not found.",
+      },
+    },
     "schemas": {
-      "401_response": {
-        "properties": {
-          "error": {
-            "enum": [
-              "Unauthorized",
-            ],
-            "example": "Unauthorized",
-            "type": "string",
-          },
-          "message": {
-            "type": "string",
-          },
-          "statusCode": {
-            "enum": [
-              401,
-            ],
-            "example": 401,
-            "type": "integer",
-          },
-        },
-        "title": "Unsuccessful rule API response",
-        "type": "object",
-      },
-      "404_response": {
-        "properties": {
-          "error": {
-            "enum": [
-              "Not Found",
-            ],
-            "example": "Not Found",
-            "type": "string",
-          },
-          "message": {
-            "example": "Saved object [action/baf33fc0-920c-11ed-b36a-874bd1548a00] not found",
-            "type": "string",
-          },
-          "statusCode": {
-            "enum": [
-              404,
-            ],
-            "example": 404,
-            "type": "integer",
-          },
-        },
-        "type": "object",
-      },
       "action_response_properties": {
         "description": "The properties vary depending on the action type.",
         "properties": {
@@ -608,34 +635,30 @@ exports[`generate spec > generates spec complex 1`] = `
         "type": "object",
       },
       "config_properties_index": {
+        "description": "Defines properties for connectors when type is \`.index\`.",
         "properties": {
-          "config": {
-            "description": "Defines properties for connectors when type is \`.index\`.",
-            "properties": {
-              "executionTimeField": {
-                "default": null,
-                "description": "Specifies a field that will contain the time the alert condition was detected.",
-                "nullable": true,
-                "type": "string",
-              },
-              "index": {
-                "description": "The Elasticsearch index to be written to.",
-                "type": "string",
-              },
-              "refresh": {
-                "default": false,
-                "description": "The refresh policy for the write request, which affects when changes are made visible to search. Refer to the refresh setting for Elasticsearch document APIs.
+          "executionTimeField": {
+            "default": null,
+            "description": "Specifies a field that will contain the time the alert condition was detected.",
+            "nullable": true,
+            "type": "string",
+          },
+          "index": {
+            "description": "The Elasticsearch index to be written to.",
+            "type": "string",
+          },
+          "refresh": {
+            "default": false,
+            "description": "The refresh policy for the write request, which affects when changes are made visible to search. Refer to the refresh setting for Elasticsearch document APIs.
 ",
-                "type": "boolean",
-              },
-            },
-            "required": [
-              "index",
-            ],
-            "title": "Connector request properties for an index connector",
-            "type": "object",
+            "type": "boolean",
           },
         },
+        "required": [
+          "index",
+        ],
+        "title": "Connector request properties for an index connector",
+        "type": "object",
       },
       "config_properties_jira": {
         "description": "Defines properties for connectors when type is \`.jira\`.",
@@ -1069,7 +1092,10 @@ exports[`generate spec > generates spec complex 1`] = `
             "$ref": "#/components/schemas/connector_response_properties_servicenow_sir",
           },
           {
-            "$ref": "#/components/schemas/connector_response_properties_slack",
+            "$ref": "#/components/schemas/connector_response_properties_slack_api",
+          },
+          {
+            "$ref": "#/components/schemas/connector_response_properties_slack_webhook",
           },
           {
             "$ref": "#/components/schemas/connector_response_properties_swimlane",
@@ -1541,7 +1567,44 @@ exports[`generate spec > generates spec complex 1`] = `
         "title": "Connector response properties for a ServiceNow SecOps connector",
         "type": "object",
       },
-      "connector_response_properties_slack": {
+      "connector_response_properties_slack_api": {
+        "properties": {
+          "connector_type_id": {
+            "description": "The type of connector.",
+            "enum": [
+              ".slack_api",
+            ],
+            "type": "string",
+          },
+          "id": {
+            "description": "The identifier for the connector.",
+            "type": "string",
+          },
+          "is_deprecated": {
+            "$ref": "#/components/schemas/is_deprecated",
+          },
+          "is_missing_secrets": {
+            "$ref": "#/components/schemas/is_missing_secrets",
+          },
+          "is_preconfigured": {
+            "$ref": "#/components/schemas/is_preconfigured",
+          },
+          "name": {
+            "description": "The display name for the connector.",
+            "type": "string",
+          },
+        },
+        "required": [
+          "connector_type_id",
+          "id",
+          "is_deprecated",
+          "is_preconfigured",
+          "name",
+        ],
+        "title": "Connector response properties for a Slack connector",
+        "type": "object",
+      },
+      "connector_response_properties_slack_webhook": {
         "properties": {
           "connector_type_id": {
             "description": "The type of connector.",
@@ -2149,7 +2212,35 @@ exports[`generate spec > generates spec complex 1`] = `
         "title": "Create ServiceNow SecOps connector request",
         "type": "object",
       },
-      "create_connector_request_slack": {
+      "create_connector_request_slack_api": {
+        "description": "The Slack connector uses Slack Incoming Webhooks.",
+        "properties": {
+          "connector_type_id": {
+            "description": "The type of connector.",
+            "enum": [
+              ".slack_api",
+            ],
+            "example": ".slack_api",
+            "type": "string",
+          },
+          "name": {
+            "description": "The display name for the connector.",
+            "example": "my-connector",
+            "type": "string",
+          },
+          "secrets": {
+            "$ref": "#/components/schemas/secrets_properties_slack_api",
+          },
+        },
+        "required": [
+          "connector_type_id",
+          "name",
+          "secrets",
+        ],
+        "title": "Create Slack connector request",
+        "type": "object",
+      },
+      "create_connector_request_slack_webhook": {
         "description": "The Slack connector uses Slack Incoming Webhooks.",
         "properties": {
           "connector_type_id": {
@@ -2166,7 +2257,7 @@ exports[`generate spec > generates spec complex 1`] = `
             "type": "string",
           },
           "secrets": {
-            "$ref": "#/components/schemas/secrets_properties_slack",
+            "$ref": "#/components/schemas/secrets_properties_slack_webhook",
           },
         },
         "required": [
@@ -3156,10 +3247,32 @@ exports[`generate spec > generates spec complex 1`] = `
         "title": "Connector secrets properties for ServiceNow ITOM, ServiceNow ITSM, and ServiceNow SecOps connectors",
         "type": "object",
       },
-      "secrets_properties_slack": {
-        "additionalProperties": true,
+      "secrets_properties_slack_api": {
         "description": "Defines secrets for connectors when type is \`.slack\`.",
-        "title": "Connector secrets properties for a Slack connector",
+        "properties": {
+          "token": {
+            "description": "Slack bot user OAuth token.",
+            "type": "string",
+          },
+        },
+        "required": [
+          "token",
+        ],
+        "title": "Connector secrets properties for a Web API Slack connector",
+        "type": "object",
+      },
+      "secrets_properties_slack_webhook": {
+        "description": "Defines secrets for connectors when type is \`.slack\`.",
+        "properties": {
+          "webhookUrl": {
+            "description": "Slack webhook url.",
+            "type": "string",
+          },
+        },
+        "required": [
+          "webhookUrl",
+        ],
+        "title": "Connector secrets properties for a Webhook Slack connector",
         "type": "object",
       },
       "secrets_properties_swimlane": {
@@ -3353,6 +3466,44 @@ exports[`generate spec > generates spec complex 1`] = `
         "title": "Create ServiceNow ITOM connector request",
         "type": "object",
       },
+      "update_connector_request_slack_api": {
+        "properties": {
+          "name": {
+            "description": "The display name for the connector.",
+            "type": "string",
+          },
+          "secrets": {
+            "$ref": "#/components/schemas/secrets_properties_slack_api",
+            "description": "The secrets object containing the necessary fields for authentication.",
+            "type": "object",
+          },
+        },
+        "required": [
+          "name",
+          "secrets",
+        ],
+        "title": "Update Slack connector request",
+        "type": "object",
+      },
+      "update_connector_request_slack_webhook": {
+        "properties": {
+          "name": {
+            "description": "The display name for the connector.",
+            "type": "string",
+          },
+          "secrets": {
+            "$ref": "#/components/schemas/secrets_properties_slack_webhook",
+            "description": "The secrets object containing the necessary fields for authentication.",
+            "type": "object",
+          },
+        },
+        "required": [
+          "name",
+          "secrets",
+        ],
+        "title": "Update Slack connector request",
+        "type": "object",
+      },
       "update_connector_request_swimlane": {
         "properties": {
           "config": {
@@ -3427,14 +3578,7 @@ exports[`generate spec > generates spec complex 1`] = `
             "description": "Indicates a successful call.",
           },
           "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/401_response",
-                },
-              },
-            },
-            "description": "Authorization information is missing or invalid.",
+            "$ref": "#/components/responses/401",
           },
         },
         "servers": [
@@ -3491,24 +3635,10 @@ exports[`generate spec > generates spec complex 1`] = `
         },
         "responses": {
           "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/action_response_properties",
-                },
-              },
-            },
-            "description": "Indicates a successful call.",
+            "$ref": "#/components/responses/200_actions",
           },
           "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/401_response",
-                },
-              },
-            },
-            "description": "Authorization information is missing or invalid.",
+            "$ref": "#/components/responses/401",
           },
         },
         "servers": [
@@ -3549,14 +3679,7 @@ exports[`generate spec > generates spec complex 1`] = `
             "description": "Indicates a successful call.",
           },
           "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/401_response",
-                },
-              },
-            },
-            "description": "Authorization information is missing or invalid.",
+            "$ref": "#/components/responses/401",
           },
         },
         "servers": [
@@ -3583,24 +3706,10 @@ exports[`generate spec > generates spec complex 1`] = `
         ],
         "responses": {
           "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/action_response_properties",
-                },
-              },
-            },
-            "description": "Indicates a successful call.",
+            "$ref": "#/components/responses/200_actions",
           },
           "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/401_response",
-                },
-              },
-            },
-            "description": "Authorization information is missing or invalid.",
+            "$ref": "#/components/responses/401",
           },
         },
         "servers": [
@@ -3656,24 +3765,10 @@ exports[`generate spec > generates spec complex 1`] = `
         },
         "responses": {
           "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/action_response_properties",
-                },
-              },
-            },
-            "description": "Indicates a successful call.",
+            "$ref": "#/components/responses/200_actions",
           },
           "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/404_response",
-                },
-              },
-            },
-            "description": "Object is not found.",
+            "$ref": "#/components/responses/404",
           },
         },
         "servers": [
@@ -3766,14 +3861,7 @@ exports[`generate spec > generates spec complex 1`] = `
             "description": "Indicates a successful call.",
           },
           "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/401_response",
-                },
-              },
-            },
-            "description": "Authorization information is missing or invalid.",
+            "$ref": "#/components/responses/401",
           },
         },
         "servers": [
@@ -3853,7 +3941,10 @@ exports[`generate spec > generates spec complex 1`] = `
                     "$ref": "#/components/schemas/create_connector_request_servicenow_sir",
                   },
                   {
-                    "$ref": "#/components/schemas/create_connector_request_slack",
+                    "$ref": "#/components/schemas/create_connector_request_slack_api",
+                  },
+                  {
+                    "$ref": "#/components/schemas/create_connector_request_slack_webhook",
                   },
                   {
                     "$ref": "#/components/schemas/create_connector_request_swimlane",
@@ -3894,14 +3985,7 @@ exports[`generate spec > generates spec complex 1`] = `
             "description": "Indicates a successful call.",
           },
           "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/401_response",
-                },
-              },
-            },
-            "description": "Authorization information is missing or invalid.",
+            "$ref": "#/components/responses/401",
           },
         },
         "servers": [
@@ -3941,14 +4025,7 @@ exports[`generate spec > generates spec complex 1`] = `
             "description": "Indicates a successful call.",
           },
           "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/401_response",
-                },
-              },
-            },
-            "description": "Authorization information is missing or invalid.",
+            "$ref": "#/components/responses/401",
           },
           "404": {
             "content": {
@@ -4014,14 +4091,7 @@ exports[`generate spec > generates spec complex 1`] = `
             "description": "Indicates a successful call.",
           },
           "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/401_response",
-                },
-              },
-            },
-            "description": "Authorization information is missing or invalid.",
+            "$ref": "#/components/responses/401",
           },
           "404": {
             "content": {
@@ -4054,6 +4124,133 @@ exports[`generate spec > generates spec complex 1`] = `
           },
         ],
         "summary": "Retrieves a connector by ID.",
+        "tags": [
+          "connectors",
+        ],
+      },
+      "post": {
+        "description": "You must have \`all\` privileges for the **Actions and Connectors** feature in the **Management** section of the Kibana feature privileges.
+",
+        "operationId": "createConnectorId",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/kbn_xsrf",
+          },
+          {
+            "$ref": "#/components/parameters/space_id",
+          },
+          {
+            "description": "A UUID v1 or v4 identifier for the connector. If you omit this parameter, an identifier is randomly generated.",
+            "in": "path",
+            "name": "connectorId",
+            "required": true,
+            "schema": {
+              "example": "ac4e6b90-6be7-11eb-ba0d-9b1c1f912d74",
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "createIndexConnectorRequest": {
+                  "$ref": "#/components/examples/create_index_connector_request",
+                },
+              },
+              "schema": {
+                "description": "The properties vary depending on the connector type.",
+                "discriminator": {
+                  "propertyName": "connector_type_id",
+                },
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/create_connector_request_cases_webhook",
+                  },
+                  {
+                    "$ref": "#/components/schemas/create_connector_request_email",
+                  },
+                  {
+                    "$ref": "#/components/schemas/create_connector_request_index",
+                  },
+                  {
+                    "$ref": "#/components/schemas/create_connector_request_jira",
+                  },
+                  {
+                    "$ref": "#/components/schemas/create_connector_request_opsgenie",
+                  },
+                  {
+                    "$ref": "#/components/schemas/create_connector_request_pagerduty",
+                  },
+                  {
+                    "$ref": "#/components/schemas/create_connector_request_resilient",
+                  },
+                  {
+                    "$ref": "#/components/schemas/create_connector_request_serverlog",
+                  },
+                  {
+                    "$ref": "#/components/schemas/create_connector_request_servicenow",
+                  },
+                  {
+                    "$ref": "#/components/schemas/create_connector_request_servicenow_itom",
+                  },
+                  {
+                    "$ref": "#/components/schemas/create_connector_request_servicenow_sir",
+                  },
+                  {
+                    "$ref": "#/components/schemas/create_connector_request_slack_api",
+                  },
+                  {
+                    "$ref": "#/components/schemas/create_connector_request_slack_webhook",
+                  },
+                  {
+                    "$ref": "#/components/schemas/create_connector_request_swimlane",
+                  },
+                  {
+                    "$ref": "#/components/schemas/create_connector_request_teams",
+                  },
+                  {
+                    "$ref": "#/components/schemas/create_connector_request_tines",
+                  },
+                  {
+                    "$ref": "#/components/schemas/create_connector_request_webhook",
+                  },
+                  {
+                    "$ref": "#/components/schemas/create_connector_request_xmatters",
+                  },
+                ],
+                "title": "Create connector request body properties",
+              },
+            },
+          },
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "createIndexConnectorResponse": {
+                    "$ref": "#/components/examples/create_index_connector_response",
+                  },
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/connector_response_properties",
+                },
+              },
+            },
+            "description": "Indicates a successful call.",
+          },
+          "401": {
+            "$ref": "#/components/responses/401",
+          },
+        },
+        "servers": [
+          {
+            "url": "https://localhost:5601",
+          },
+        ],
+        "summary": "Creates a connector.",
         "tags": [
           "connectors",
         ],
@@ -4109,6 +4306,12 @@ exports[`generate spec > generates spec complex 1`] = `
                     "$ref": "#/components/schemas/update_connector_request_servicenow_itom",
                   },
                   {
+                    "$ref": "#/components/schemas/update_connector_request_slack_api",
+                  },
+                  {
+                    "$ref": "#/components/schemas/update_connector_request_slack_webhook",
+                  },
+                  {
                     "$ref": "#/components/schemas/update_connector_request_swimlane",
                   },
                 ],
@@ -4154,24 +4357,10 @@ exports[`generate spec > generates spec complex 1`] = `
             "description": "Indicates a bad request.",
           },
           "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/401_response",
-                },
-              },
-            },
-            "description": "Authorization information is missing or invalid.",
+            "$ref": "#/components/responses/401",
           },
           "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/404_response",
-                },
-              },
-            },
-            "description": "Object is not found.",
+            "$ref": "#/components/responses/404",
           },
         },
         "servers": [
@@ -4355,14 +4544,7 @@ exports[`generate spec > generates spec complex 1`] = `
             "description": "Indicates a successful call.",
           },
           "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/401_response",
-                },
-              },
-            },
-            "description": "Authorization information is missing or invalid.",
+            "$ref": "#/components/responses/401",
           },
         },
         "servers": [
@@ -4463,14 +4645,7 @@ exports[`generate spec > generates spec complex 1`] = `
             "description": "Indicates a successful call.",
           },
           "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/401_response",
-                },
-              },
-            },
-            "description": "Authorization information is missing or invalid.",
+            "$ref": "#/components/responses/401",
           },
         },
         "servers": [
@@ -4565,14 +4740,7 @@ exports[`generate spec > generates spec complex 1`] = `
             "description": "Indicates a successful call.",
           },
           "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/401_response",
-                },
-              },
-            },
-            "description": "Authorization information is missing or invalid.",
+            "$ref": "#/components/responses/401",
           },
         },
         "servers": [
@@ -4645,14 +4813,7 @@ exports[`generate spec > generates spec complex 1`] = `
             "description": "Indicates a successful call.",
           },
           "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/401_response",
-                },
-              },
-            },
-            "description": "Authorization information is missing or invalid.",
+            "$ref": "#/components/responses/401",
           },
         },
         "servers": [

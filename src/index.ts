@@ -6,8 +6,7 @@
  * Side Public License, v 1.
  */
 
-import * as yaml from "yaml"
-import { exportFile, getFiles, importFileByTypes } from "./file_io"
+import { exportSpecsAsYaml, getFiles, importFileByTypes } from "./file_io"
 import { OpenAPIObject } from "./types/openapi_spec"
 
 /**
@@ -85,11 +84,12 @@ export const generateSpec = ({
  * Orchestrates everything. For each entry point spec it fills missing definitions
  * and saves the content into a new file.
  */
-export const main = async () => {
-  const sourceDir = "./openapi"
-  const buildDir = "./build/"
-
-  const fileNames = getFiles({ pattern: "openapi/demo/**/*.yaml", sourceDir })
+export const getSpecs = async ({
+  sourceDir,
+}: {
+  sourceDir: string
+}): Promise<{ spec: OpenAPIObject; fileName: string }[]> => {
+  const fileNames = getFiles({ pattern: "**/*.yaml", sourceDir })
 
   const { entry, partial } = await importFileByTypes({
     fileNames,
@@ -106,7 +106,10 @@ export const main = async () => {
     }) => {
       return {
         spec: partial.reduce(
-          (acc: OpenAPIObject, partialSpec: Partial<OpenAPIObject>) => {
+          (
+            acc: OpenAPIObject,
+            { spec: partialSpec }: { spec: Partial<OpenAPIObject> },
+          ) => {
             return generateSpec({
               entryPointSpec: acc,
               partialSpec: partialSpec,
@@ -119,18 +122,16 @@ export const main = async () => {
     },
   )
 
-  specs.forEach(
-    ({ spec, fileName }: { spec: OpenAPIObject; fileName: string }) => {
-      console.log(spec, fileName)
-      const doc = yaml.parseDocument(JSON.stringify(spec))
-      const buildPath = `${buildDir}/${fileName}`
-      exportFile({ buildPath, content: doc.toString() })
-    },
-  )
-
-  console.log(specs)
-
   return specs
 }
 
-main()
+export const main = async ({
+  sourceDir = "./openapi",
+  buildDir = "./build",
+}: {
+  sourceDir?: string
+  buildDir?: string
+} = {}) => {
+  const specs = await getSpecs({ sourceDir })
+  exportSpecsAsYaml({ specs, buildDir })
+}

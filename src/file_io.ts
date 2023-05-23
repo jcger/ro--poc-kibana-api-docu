@@ -9,6 +9,7 @@
 import * as fs from "fs-extra"
 import * as glob from "glob"
 import * as yaml from "yaml"
+import { OpenAPIObject } from "./types/openapi_spec"
 
 const parseYamlFile = async ({ fileName }: { fileName: string }) => {
   const yamlContent = await fs.readFile(fileName, "utf8")
@@ -70,14 +71,21 @@ export const getFiles = ({
   })
 }
 
-export const exportFile = async ({
-  buildPath,
-  content,
+export const exportSpecsAsYaml = async ({
+  specs,
+  buildDir = "./build",
 }: {
-  buildPath: string
-  content: string
+  specs: { spec: OpenAPIObject; fileName: string }[]
+  buildDir: string
 }) => {
-  const buildFolderPath = buildPath.substring(0, buildPath.lastIndexOf("/"))
-  await fs.ensureDir(buildFolderPath)
-  await fs.writeFile(buildPath, content)
+  specs.forEach(
+    async ({ spec, fileName }: { spec: OpenAPIObject; fileName: string }) => {
+      const doc = yaml.parseDocument(JSON.stringify(spec))
+      const buildPath = `${buildDir}/${fileName}`
+
+      const buildFolderPath = buildPath.substring(0, buildPath.lastIndexOf("/"))
+      await fs.ensureDir(buildFolderPath)
+      await fs.writeFile(buildPath, doc.toString())
+    },
+  )
 }
