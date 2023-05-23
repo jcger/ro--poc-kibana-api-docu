@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest"
+import { expect, it } from "vitest"
 import { importFileByTypes } from "../src/file_io"
 
 it("import file by types", async () => {

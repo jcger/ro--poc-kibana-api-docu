@@ -1,12 +1,17 @@
-import { getFiles, importFileByTypes } from "./file_io"
-import { OpenAPIObject } from "./types/openapi_spec"
-
 /*
  * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
  * or more contributor license agreements. Licensed under the Elastic License
  * 2.0 and the Server Side Public License, v 1; you may not use this file except
  * in compliance with, at your election, the Elastic License 2.0 or the Server
  * Side Public License, v 1.
+ */
+
+import * as yaml from "yaml"
+import { exportFile, getFiles, importFileByTypes } from "./file_io"
+import { OpenAPIObject } from "./types/openapi_spec"
+
+/**
+ * Searches for missing definitions in an OpenAPI specification.
  */
 export const getMissingDefinitions = ({
   spec,
@@ -42,6 +47,10 @@ export const getMissingDefinitions = ({
   return missingDefinitions
 }
 
+/**
+ * Generates a modified OpenAPI specification by merging a partial specification into an
+ * entry point specification.
+ */
 export const generateSpec = ({
   entryPointSpec,
   partialSpec,
@@ -72,23 +81,54 @@ export const generateSpec = ({
   return entryPointSpec
 }
 
+/**
+ * Orchestrates everything. For each entry point spec it fills missing definitions
+ * and saves the content into a new file.
+ */
 export const main = async () => {
+  const sourceDir = "./openapi"
+  const buildDir = "./build/"
+
+  const fileNames = getFiles({ pattern: "openapi/demo/**/*.yaml", sourceDir })
+
   const { entry, partial } = await importFileByTypes({
-    fileNames: getFiles({ pattern: "**/*.yaml" }),
+    fileNames,
     types: ["entry", "partial"],
   })
 
-  const specs = entry.map((entrySpec: OpenAPIObject) => {
-    return Object.assign(
-      {},
-      ...partial.map((partialSpec: Partial<OpenAPIObject>) =>
-        generateSpec({
-          entryPointSpec: entrySpec,
-          partialSpec: partialSpec,
-        }),
-      ),
-    )
-  })
+  const specs = entry.map(
+    ({
+      spec: entrySpec,
+      fileName,
+    }: {
+      spec: OpenAPIObject
+      fileName: string
+    }) => {
+      return {
+        spec: partial.reduce(
+          (acc: OpenAPIObject, partialSpec: Partial<OpenAPIObject>) => {
+            return generateSpec({
+              entryPointSpec: acc,
+              partialSpec: partialSpec,
+            })
+          },
+          entrySpec,
+        ),
+        fileName,
+      }
+    },
+  )
+
+  specs.forEach(
+    ({ spec, fileName }: { spec: OpenAPIObject; fileName: string }) => {
+      console.log(spec, fileName)
+      const doc = yaml.parseDocument(JSON.stringify(spec))
+      const buildPath = `${buildDir}/${fileName}`
+      exportFile({ buildPath, content: doc.toString() })
+    },
+  )
+
+  console.log(specs)
 
   return specs
 }

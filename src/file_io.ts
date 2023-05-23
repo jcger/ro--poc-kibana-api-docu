@@ -6,7 +6,7 @@
  * Side Public License, v 1.
  */
 
-import fs from "fs/promises"
+import * as fs from "fs-extra"
 import * as glob from "glob"
 import * as yaml from "yaml"
 
@@ -23,45 +23,61 @@ export const importFileByTypes = async ({
   types: string[]
 }) => {
   const yamlContent = await Promise.all(
-    fileNames.map((fileName) => parseYamlFile({ fileName })),
+    fileNames.map(async (fileName) => {
+      return {
+        doc: await parseYamlFile({ fileName }),
+        fileName,
+      }
+    }),
   )
 
-  const filteredYamlContent = yamlContent.filter((doc) =>
-    doc.commentBefore?.includes("@kbn-doc-linker"),
-  )
-
-  const parsedYaml = filteredYamlContent.reduce(
-    (acc: any, doc: yaml.Document.Parsed<yaml.ParsedNode>) => {
-      types.forEach((type) => {
-        if (doc.commentBefore?.includes(type)) {
-          if (!acc[type]) acc[type] = []
-          acc[type].push(doc.toJSON())
-        }
-      })
-      return acc
-    },
-    {},
-  )
+  const parsedYaml = yamlContent
+    .filter(({ doc }) => doc.commentBefore?.includes("@kbn-doc-linker"))
+    .reduce(
+      (
+        acc: any,
+        {
+          doc,
+          fileName,
+        }: { doc: yaml.Document.Parsed<yaml.ParsedNode>; fileName: string },
+      ) => {
+        types.forEach((type) => {
+          if (doc.commentBefore?.includes(type)) {
+            if (!acc[type]) acc[type] = []
+            acc[type].push({
+              spec: doc.toJSON(),
+              fileName,
+            })
+          }
+        })
+        return acc
+      },
+      {},
+    )
 
   return parsedYaml
 }
 
-export const getFiles = ({ pattern }: { pattern: string }) => {
+export const getFiles = ({
+  pattern,
+  sourceDir,
+}: {
+  pattern: string
+  sourceDir: string
+}) => {
   return glob.glob.sync(pattern, {
-    root: process.cwd(),
+    root: sourceDir || process.cwd(),
   })
 }
 
 export const exportFile = async ({
-  fileName,
+  buildPath,
   content,
 }: {
-  fileName: string
+  buildPath: string
   content: string
 }) => {
-  try {
-    await fs.writeFile(fileName, content)
-  } catch (err) {
-    console.log(err)
-  }
+  const buildFolderPath = buildPath.substring(0, buildPath.lastIndexOf("/"))
+  await fs.ensureDir(buildFolderPath)
+  await fs.writeFile(buildPath, content)
 }

@@ -4,15 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "clean": "rimraf build",
     "test:debug": "NODE_ENV=test vitest --inspect-brk --single-thread",
     "test": "NODE_ENV=test vitest",
-    "start": "vite-node src",
-    "dev": "nodemon src -e ts,json,yaml --exec 'npm run start'"
+    "build": "npm run clean && vite-node src",
+    "dev": "nodemon src -e ts,json,yaml --exec 'npm run build'",
+    "lint": "npx @redocly/cli lint openapi/demo/example.yaml"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/fs-extra": "^11.0.1",
     "@types/lodash": "^4.14.194",
     "@types/node": "^20.1.7",
     "nodemon": "^2.0.22",
@@ -23,6 +26,7 @@
     "vitest": "^0.31.0"
   },
   "dependencies": {
+    "fs-extra": "^11.1.1",
     "lodash": "^4.17.21",
     "yaml": "^2.2.2"
   }
