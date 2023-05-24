@@ -9,12 +9,7 @@
 import * as fs from "fs-extra"
 import * as glob from "glob"
 import * as yaml from "yaml"
-import {
-  DocLinkerTypes,
-  Spec,
-  SpecsByType,
-  specFactoryByDocument,
-} from "./spec"
+import { DocLinkerTypes, Spec, SpecsByType, specFactory } from "./spec"
 
 const DOC_LINKER_TYPES: DocLinkerTypes[] = ["entry", "partial"]
 
@@ -54,7 +49,7 @@ export const importFileByTypes = async ({
       DOC_LINKER_TYPES.forEach((type: DocLinkerTypes) => {
         if (doc.commentBefore?.includes(type)) {
           console.log(JSON.stringify(doc, null, 2))
-          acc[type].push(specFactoryByDocument({ doc, fileName }))
+          acc[type].push(specFactory({ doc, fileName }))
         }
       })
 

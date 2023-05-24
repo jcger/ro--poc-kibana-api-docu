@@ -6,10 +6,9 @@
  * Side Public License, v 1.
  */
 
-import * as yaml from "yaml"
 import { exportSpecs, getFiles, importFileByTypes } from "./io"
 import { OpenAPIObject } from "./types/openapi_spec"
-import { Spec, openApi2yamlDoc, specFactoryByDocument } from "./spec"
+import { Spec, openApi2yamlDoc, specFactory } from "./spec"
 
 /**
  * Searches for missing definitions in an OpenAPI specification.
@@ -82,9 +81,6 @@ export const generateSpec = ({
   return entryPointSpec
 }
 
-/**
- * Orchestrates everything. For each entry point spec it fills missing definitions
- */
 export const getYamlSpecs = async ({
   sourceDir,
 }: {
@@ -107,7 +103,7 @@ export const getYamlSpecs = async ({
       entrySpec.openApi,
     )
 
-    return specFactoryByDocument({
+    return specFactory({
       doc: openApi2yamlDoc(generatedSpec),
       fileName: entrySpec.fileName,
     })
