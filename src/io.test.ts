@@ -1,5 +1,5 @@
 import { expect, it } from "vitest"
-import { importFileByTypes } from "../src/file_io"
+import { importFileByTypes } from "./io"
 
 it("import file by types", async () => {
   const output = await importFileByTypes({
@@ -8,7 +8,6 @@ it("import file by types", async () => {
       "openapi/connectors/index/config_properties_index.yaml",
       "openapi/another_yaml_in_project.yaml",
     ],
-    types: ["entry", "partial"],
   })
 
   expect(output).toMatchSnapshot()

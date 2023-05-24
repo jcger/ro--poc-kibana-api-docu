@@ -6,8 +6,10 @@
  * Side Public License, v 1.
  */
 
-import { exportSpecsAsYaml, getFiles, importFileByTypes } from "./file_io"
+import * as yaml from "yaml"
+import { exportSpecs, getFiles, importFileByTypes } from "./io"
 import { OpenAPIObject } from "./types/openapi_spec"
+import { Spec, openApi2yamlDoc, specFactoryByDocument } from "./spec"
 
 /**
  * Searches for missing definitions in an OpenAPI specification.
@@ -82,40 +84,34 @@ export const generateSpec = ({
 
 /**
  * Orchestrates everything. For each entry point spec it fills missing definitions
- * and saves the content into a new file.
  */
-export const getSpecs = async ({
+export const getYamlSpecs = async ({
   sourceDir,
 }: {
   sourceDir: string
-}): Promise<{ spec: OpenAPIObject; fileName: string }[]> => {
+}): Promise<Spec[]> => {
   const fileNames = getFiles({ pattern: "**/*.yaml", sourceDir })
 
   const { entry, partial } = await importFileByTypes({
     fileNames,
-    types: ["entry", "partial"],
   })
 
-  const specs = Object.keys(entry).map((fileName: string) => {
-    const entrySpec = entry[fileName]
-    return {
-      spec: partial.reduce(
-        (
-          acc: OpenAPIObject,
-          { spec: partialSpec }: { spec: Partial<OpenAPIObject> },
-        ) => {
-          return generateSpec({
-            entryPointSpec: acc,
-            partialSpec: partialSpec,
-          })
-        },
-        entrySpec,
-      ),
-      fileName,
-    }
-  })
+  return entry.map((entrySpec: Spec) => {
+    const generatedSpec = partial.reduce(
+      (acc: OpenAPIObject, partialSpec: Spec) => {
+        return generateSpec({
+          entryPointSpec: acc,
+          partialSpec: partialSpec.openApi,
+        })
+      },
+      entrySpec.openApi,
+    )
 
-  return specs
+    return specFactoryByDocument({
+      doc: openApi2yamlDoc(generatedSpec),
+      fileName: entrySpec.fileName,
+    })
+  }, [])
 }
 
 export const main = async ({
@@ -125,6 +121,10 @@ export const main = async ({
   sourceDir?: string
   buildDir?: string
 } = {}) => {
-  const specs = await getSpecs({ sourceDir })
-  exportSpecsAsYaml({ specs, buildDir })
+  const specs = await getYamlSpecs({ sourceDir })
+  exportSpecs({ specs, buildDir })
+}
+
+if (process.env.NODE_ENV !== "test") {
+  main()
 }

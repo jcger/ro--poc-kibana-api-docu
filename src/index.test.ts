@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest"
 import fs from "fs/promises"
 import yaml from "yaml"
-import { generateSpec } from "../src/index"
-import { OpenAPIObject } from "../src/types/openapi_spec"
+import { generateSpec } from "./index"
+import { OpenAPIObject } from "./types/openapi_spec"
+import { getMissingDefinitions } from "./index"
 
 export const importYamlContent = async ({ fileName }: { fileName: string }) => {
   const yamlContent = await fs.readFile(fileName, "utf8")
@@ -92,5 +93,46 @@ describe("generate spec", () => {
     expect(
       generateSpec({ entryPointSpec: spec, partialSpec }),
     ).toMatchSnapshot()
+  })
+})
+
+describe("missing definition", () => {
+  it("finds missing definitions simple", () => {
+    const spec = {
+      a: {
+        b: {
+          c: {
+            d: "#/components/schemas/existing",
+          },
+        },
+        e: "#/components/schemas/missing",
+        f: {
+          g: "#/components/schemas/missing",
+        },
+      },
+      components: {
+        schemas: {
+          existing: "existing",
+        },
+      },
+    }
+
+    expect(getMissingDefinitions({ spec })).toEqual({
+      "#/components/schemas/missing": ["a.e", "a.f.g"],
+    })
+  })
+
+  it("finds missing definitions complex", async () => {
+    const spec = await importYamlContent({
+      fileName: "openapi/connectors/bundled.yaml",
+    })
+
+    expect(getMissingDefinitions({ spec })).toEqual({
+      "#/components/schemas/config_properties_index": [
+        "components.schemas.create_connector_request_index.properties.config.$ref",
+        "components.schemas.connector_response_properties_index.properties.config.$ref",
+        "components.schemas.update_connector_request_index.properties.config.$ref",
+      ],
+    })
   })
 })
