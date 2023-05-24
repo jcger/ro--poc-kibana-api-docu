@@ -1,6 +1,6 @@
-## Issue
+## Context
 
-Documentation is centralized
+In our API, there are certain parameters that have not been documented. This lack of documentation is due to the absence of a straightforward method for individual teams to generate documentation specifically for their respective components without requiring knowledge of our documentation structure. As a result, these parameters remain undocumented, which may cause confusion or difficulty for developers trying to interact with the API. It is essential to establish a streamlined process that enables teams to contribute and document their components effectively, ensuring comprehensive and up-to-date API documentation for all stakeholders. By implementing a user-friendly documentation framework and providing clear guidelines, we can empower teams to document their API parameters seamlessly and improve the overall accessibility and usability of our API.
 
 ## How it works
 
