@@ -1,0 +1,16 @@
+post:
+  operationId: createExample
+  summary: Create a new example
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          oneOf:
+            - $ref: openapi/demo/paths/example.yaml
+            - $ref: openapi/demo/paths/example.yaml
+  responses:
+    "200":
+      description: OK
+    "400":
+      description: KO

@@ -5,122 +5,92 @@
  * in compliance with, at your election, the Elastic License 2.0 or the Server
  * Side Public License, v 1.
  */
+import * as glob from "glob"
+import * as path from "path"
+import { loadYamlFile, saveYamlFile } from "./io"
 
-import { exportSpecs, getFiles, importFileByTypes } from "./io"
-import { OpenAPIObject } from "./types/openapi_spec"
-import { Spec, openApi2yamlDoc, specFactory } from "./spec"
+export interface OpenAPISpec {
+  $ref?: string
+  [key: string]: any
+}
 
-/**
- * Searches for missing definitions in an OpenAPI specification.
- */
-export const getMissingDefinitions = ({
-  spec,
-}: {
-  spec: any
-}): { [key: string]: string[] } => {
-  const missingDefinitions: { [definition: string]: string[] } = {}
+// Recursively find all $ref values in the spec and add them to a set
+function findRefs(obj: OpenAPISpec, refs: Set<string>): void {
+  for (let key in obj) {
+    if (typeof obj[key] === "object" && obj[key] !== null) {
+      findRefs(obj[key], refs)
+    } else if (key === "$ref" && obj[key].startsWith("#")) {
+      refs.add(obj[key])
+    }
+  }
+}
 
-  const dfs = (node: any, path: string[] = []) => {
-    for (const key in node) {
-      const newPath = [...path, key]
-      if (typeof node[key] === "object" && node[key] !== null) {
-        dfs(node[key], newPath)
-      } else if (typeof node[key] === "string" && node[key].startsWith("#/")) {
-        const defPath = node[key].substring(2).split("/")
-        let defNode = spec
-        for (const p of defPath) {
-          defNode = defNode[p]
-          if (defNode === undefined) {
-            const pathString = newPath.join(".")
-            if (!missingDefinitions[node[key]]) {
-              missingDefinitions[node[key]] = []
-            }
-            missingDefinitions[node[key]].push(pathString)
+// Check whether a spec contains a specific $ref, and replace it with the relative file path if so
+function replaceRef(
+  obj: OpenAPISpec,
+  ref: string,
+  filePath: string,
+  entryFilePath: string,
+): boolean {
+  let replaced = false
+  for (let key in obj) {
+    if (typeof obj[key] === "object" && obj[key] !== null) {
+      if (replaceRef(obj[key], ref, filePath, entryFilePath)) {
+        replaced = true
+      }
+    } else if (key === "$ref" && obj[key] === ref) {
+      obj[key] = path.relative(path.dirname(entryFilePath), filePath)
+      replaced = true
+    }
+  }
+  return replaced
+}
+
+function processFiles(files: string[], basePath: string): void {
+  // Find all entrypoint.yaml files
+  const entryFiles = files.filter((file) => file.endsWith("entrypoint.yaml"))
+  if (entryFiles.length === 0) {
+    console.log("No entrypoint.yaml file found.")
+    return
+  }
+
+  for (const entryFile of entryFiles) {
+    const allRefs = new Set<string>()
+    const entryFilePath = path.join(basePath, entryFile)
+
+    // First, find all $ref values in the entry file
+    const entryYamlData = loadYamlFile(entryFilePath)
+    findRefs(entryYamlData, allRefs)
+
+    // Then, check whether each ref is defined in any of the other files
+    for (const ref of allRefs) {
+      let found = false
+      for (const file of files) {
+        if (file !== entryFile) {
+          const filePath = path.join(basePath, file)
+          const yamlData = loadYamlFile(filePath)
+          if (replaceRef(entryYamlData, ref, filePath, entryFilePath)) {
+            saveYamlFile(entryFilePath, entryYamlData)
+            found = true
             break
           }
         }
       }
-    }
-  }
-
-  dfs(spec)
-  return missingDefinitions
-}
-
-/**
- * Generates a modified OpenAPI specification by merging a partial specification into an
- * entry point specification.
- */
-export const generateSpec = ({
-  entryPointSpec,
-  partialSpec,
-}: {
-  entryPointSpec: OpenAPIObject
-  partialSpec: { [key: string]: any }
-}): OpenAPIObject => {
-  const missingDefinitions = getMissingDefinitions({
-    spec: entryPointSpec,
-  })
-
-  for (const missingDef in missingDefinitions) {
-    const defPath = missingDef.substring(2).split("/")
-    const lastElement = defPath[defPath.length - 1]
-
-    if (partialSpec[lastElement] !== undefined) {
-      let currentLevel: any = entryPointSpec
-      for (let i = 0; i < defPath.length - 1; i++) {
-        if (!currentLevel[defPath[i]]) {
-          currentLevel[defPath[i]] = {}
-        }
-        currentLevel = currentLevel[defPath[i]]
+      if (!found) {
+        console.log(`Undefined $ref found: ${ref} in file: ${entryFilePath}`)
       }
-      currentLevel[lastElement] = partialSpec[lastElement]
     }
   }
-
-  return entryPointSpec
 }
 
-export const getYamlSpecs = async ({
-  sourceDir,
-}: {
-  sourceDir: string
-}): Promise<Spec[]> => {
-  const fileNames = getFiles({ pattern: "**/*.yaml", sourceDir })
-
-  const { entry, partial } = await importFileByTypes({
-    fileNames,
+const main = async ({ sourceDir = "./openapi" }: { sourceDir: string }) => {
+  const fileNames = glob.glob.sync(`${sourceDir}/**/*.yaml`, {
+    root: sourceDir || process.cwd(),
   })
 
-  return entry.map((entrySpec: Spec) => {
-    const generatedSpec = partial.reduce(
-      (acc: OpenAPIObject, partialSpec: Spec) => {
-        return generateSpec({
-          entryPointSpec: acc,
-          partialSpec: partialSpec.openApi,
-        })
-      },
-      entrySpec.openApi,
-    )
-
-    return specFactory({
-      doc: openApi2yamlDoc(generatedSpec),
-      fileName: entrySpec.fileName,
-    })
-  }, [])
-}
-
-export const main = async ({
-  sourceDir = "./openapi",
-  buildDir = "./build",
-}: {
-  sourceDir?: string
-  buildDir?: string
-} = {}) => {
-  const specs = await getYamlSpecs({ sourceDir })
-  exportSpecs({ specs, buildDir })
+  processFiles(fileNames, sourceDir)
 }
 
 if (process.env.NODE_ENV !== "test") {
-  main()
+  main({ sourceDir: "." })
 }

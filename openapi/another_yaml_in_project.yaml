@@ -23,7 +23,6 @@ components:
       required:
         - id
         - name
-  config_properties_index:
   properties:
     broken:
       title: You shouldn't see this as this file should be ignored!!!

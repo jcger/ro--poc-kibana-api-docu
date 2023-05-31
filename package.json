@@ -9,7 +9,7 @@
     "test": "NODE_ENV=test vitest",
     "build": "npm run clean && vite-node src",
     "dev": "nodemon src -e ts,json,yaml --exec 'npm run build'",
-    "lint": "npx @redocly/cli lint openapi/demo/example.yaml"
+    "lint": "npx @redocly/cli@latest lint openapi/demo/example.yaml"
   },
   "keywords": [],
   "author": "",
