@@ -1,4 +1,6 @@
 import * as glob from "glob"
+import * as yaml from "yaml"
+import * as fs from "fs-extra"
 import redocly from "@redocly/openapi-core"
 import { loadYamlFile } from "./io"
 import path from "path"
@@ -84,8 +86,12 @@ const main = async ({ sourceDir = "./openapi" }: { sourceDir: string }) => {
               if (definition && definition.$ref) {
                 replaceRef(spec, definition.$ref, relativePath)
 
-                const yaml = jsYaml.safeDump(spec)
-                fs.writeFileSync(location.source.absoluteRef, yaml, "utf8")
+                const yamlContent = String(new yaml.Document(spec))
+                fs.writeFileSync(
+                  location.source.absoluteRef,
+                  yamlContent,
+                  "utf8",
+                )
               }
 
               return true
