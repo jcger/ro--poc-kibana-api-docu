@@ -28,8 +28,6 @@ function getValueFromPath(obj: OpenAPISpec, path: string) {
 }
 
 const getDefinition = (location: redocly.LocationObject) => {
-  if (!location.pointer)
-    throw new Error(`No pointer error: ${location.source.absoluteRef}`)
   const spec = loadYamlFile(location.source.absoluteRef)
   return getValueFromPath(spec, location.pointer)
 }
@@ -63,6 +61,8 @@ const main = async ({ sourceDir = "./openapi" }: { sourceDir: string }) => {
           if (problem.message !== "Can't resolve $ref") return
 
           problem.location.forEach((location) => {
+            if (!location.pointer) return
+
             const definitionPath = getDefinition(location)
             if (!definitionPath || !definitionPath.$ref) return
 
@@ -70,26 +70,29 @@ const main = async ({ sourceDir = "./openapi" }: { sourceDir: string }) => {
               .split("/")
               .slice(-1)[0]
 
-            console.log("missingDefinition", missingDefinition)
-            // TODO: what should happen if there is more than one?
             const found = files.some((file: string) => {
               if (!file.endsWith(`${missingDefinition}.yaml`)) return false
 
               const relativePath = path.relative(
-                path.dirname(entryPointFile),
+                path.dirname(location.source.absoluteRef),
                 file,
               )
-              const newRef = `./${relativePath}/${file.slice(-1)}`
-              console.log(
-                "Replacing",
-                definitionPath,
-                "with",
-                newRef,
-                "in",
-                entryPointFile,
-              )
-              // replaceRef(entryYamlData, ref, newRef)
-              // saveYamlFile(entryFilePath, entryYamlData)
+              console.log({
+                absRef: location.source.absoluteRef,
+                relPath: relativePath,
+                pointer: location.pointer,
+              })
+              // TODO: Open "absoluteRef" file, go to the "pointer" position and sustitute the $ref to be "relativePath"
+              // TODO: Open "absoluteRef" file, go to the "pointer" position and replace the $ref to be "relativePath"
+              const spec = loadYamlFile(location.source.absoluteRef)
+              const definition = getValueFromPath(spec, location.pointer)
+              if (definition && definition.$ref) {
+                replaceRef(spec, definition.$ref, relativePath)
+
+                const yaml = jsYaml.safeDump(spec)
+                fs.writeFileSync(location.source.absoluteRef, yaml, "utf8")
+              }
+
               return true
             })
 
