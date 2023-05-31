@@ -9,7 +9,7 @@ required:
   - name
 properties:
   config:
-    $ref: 'config_properties_index.yaml'  
+    $ref: '#/components/schemas/config_properties_index'  
   connector_type_id:
     type: string
     description: The type of connector.
