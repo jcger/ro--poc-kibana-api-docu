@@ -1,0 +1,27 @@
+properties:
+  aggField:
+    type: string
+  aggType:
+    type: string
+  groupBy:
+    type: string
+  index:
+    type: array
+    items:
+      type: string
+  termField:
+    type: string
+  termSize:
+    type: number
+  threshold:
+    type: array
+    items:
+      type: number
+  thresholdComparator:
+    type: string
+  timeField:
+    type: string
+  timeWindowSize:
+    type: number
+  timeWindowUnit:
+    type: string
