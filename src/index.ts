@@ -15,70 +15,103 @@ export interface OpenAPISpec {
 }
 
 // Recursively find all $ref values in the spec and add them to a set
-function findRefs(obj: OpenAPISpec, refs: Set<string>): void {
+function findRefs(
+  obj: OpenAPISpec,
+  refs: Set<string>,
+  fileRefs: Set<string>,
+): void {
   for (let key in obj) {
     if (typeof obj[key] === "object" && obj[key] !== null) {
-      findRefs(obj[key], refs)
-    } else if (key === "$ref" && obj[key].startsWith("#")) {
-      refs.add(obj[key])
+      findRefs(obj[key], refs, fileRefs)
+    } else if (key === "$ref") {
+      if (obj[key].startsWith("#")) {
+        refs.add(obj[key])
+      } else {
+        fileRefs.add(obj[key])
+      }
     }
   }
 }
 
-// Check whether a spec contains a specific $ref, and replace it with the relative file path if so
-function replaceRef(
-  obj: OpenAPISpec,
-  ref: string,
-  filePath: string,
-  entryFilePath: string,
-): boolean {
-  let replaced = false
+// Check whether a spec contains a specific $ref
+function checkRef(obj: OpenAPISpec, ref: string): boolean {
   for (let key in obj) {
     if (typeof obj[key] === "object" && obj[key] !== null) {
-      if (replaceRef(obj[key], ref, filePath, entryFilePath)) {
-        replaced = true
+      if (checkRef(obj[key], ref)) {
+        return true
       }
     } else if (key === "$ref" && obj[key] === ref) {
-      obj[key] = path.relative(path.dirname(entryFilePath), filePath)
-      replaced = true
+      return true
     }
   }
-  return replaced
+  return false
 }
 
-function processFiles(files: string[], basePath: string): void {
-  // Find all entrypoint.yaml files
-  const entryFiles = files.filter((file) => file.endsWith("entrypoint.yaml"))
-  if (entryFiles.length === 0) {
-    console.log("No entrypoint.yaml file found.")
-    return
+function processFiles(
+  entryFilePath: string,
+  files: string[],
+  basePath: string,
+): void {
+  const allRefs = new Set<string>()
+  const fileRefs = new Set<string>()
+  const visitedFiles = new Set<string>()
+
+  // First, find all $ref values in the entry file
+  let entryYamlData = loadYamlFile(entryFilePath)
+  findRefs(entryYamlData, allRefs, fileRefs)
+
+  while (fileRefs.size > 0) {
+    const fileRef = fileRefs.values().next().value
+    fileRefs.delete(fileRef)
+
+    if (visitedFiles.has(fileRef)) {
+      continue
+    }
+    visitedFiles.add(fileRef)
+
+    const filePath = path.join(basePath, fileRef)
+    console.log("loading file", filePath)
+    const yamlData = loadYamlFile(filePath)
+    findRefs(yamlData, allRefs, fileRefs)
   }
 
-  for (const entryFile of entryFiles) {
-    const allRefs = new Set<string>()
-    const entryFilePath = path.join(basePath, entryFile)
-
-    // First, find all $ref values in the entry file
-    const entryYamlData = loadYamlFile(entryFilePath)
-    findRefs(entryYamlData, allRefs)
-
-    // Then, check whether each ref is defined in any of the other files
-    for (const ref of allRefs) {
-      let found = false
+  // Then, check whether each ref is defined in any of the other files
+  for (const ref of allRefs) {
+    let found = false
+    for (const fileRef of visitedFiles) {
+      const filePath = path.join(basePath, fileRef)
+      const yamlData = loadYamlFile(filePath)
+      if (checkRef(yamlData, ref)) {
+        found = true
+        break
+      }
+    }
+    if (!found) {
       for (const file of files) {
-        if (file !== entryFile) {
-          const filePath = path.join(basePath, file)
-          const yamlData = loadYamlFile(filePath)
-          if (replaceRef(entryYamlData, ref, filePath, entryFilePath)) {
-            saveYamlFile(entryFilePath, entryYamlData)
-            found = true
-            break
-          }
+        const filePath = path.join(basePath, file)
+        const yamlData = loadYamlFile(filePath)
+        if (checkRef(yamlData, ref)) {
+          const relativePath = path.relative(
+            path.dirname(entryFilePath),
+            filePath,
+          )
+          const newRef = `./${relativePath}#${ref.slice(1)}`
+          console.log("Replacing", ref, "with", newRef, "in", entryFilePath)
+          // replaceRef(entryYamlData, ref, newRef)
+          // saveYamlFile(entryFilePath, entryYamlData)
+          break
         }
       }
-      if (!found) {
-        console.log(`Undefined $ref found: ${ref} in file: ${entryFilePath}`)
-      }
+    }
+  }
+}
+
+function replaceRef(obj: OpenAPISpec, oldRef: string, newRef: string): void {
+  for (let key in obj) {
+    if (typeof obj[key] === "object" && obj[key] !== null) {
+      replaceRef(obj[key], oldRef, newRef)
+    } else if (key === "$ref" && obj[key] === oldRef) {
+      obj[key] = newRef
     }
   }
 }
@@ -87,8 +120,12 @@ const main = async ({ sourceDir = "./openapi" }: { sourceDir: string }) => {
   const fileNames = glob.glob.sync(`${sourceDir}/**/*.yaml`, {
     root: sourceDir || process.cwd(),
   })
-
-  processFiles(fileNames, sourceDir)
+  fileNames.forEach((file: string) => {
+    if (file.endsWith("entrypoint.yaml")) {
+      const fileDir = path.dirname(file)
+      processFiles(path.join(sourceDir, file), fileNames, fileDir)
+    }
+  })
 }
 
 if (process.env.NODE_ENV !== "test") {

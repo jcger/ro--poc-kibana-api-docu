@@ -17,7 +17,7 @@ components:
       type: http
       scheme: basic
   schemas:
-    NewSchema:
+    new_schema:
       type: object
       properties:
         email:

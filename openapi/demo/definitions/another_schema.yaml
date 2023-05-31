@@ -1,11 +1,8 @@
-# @kbn-doc-linker partial
-
-AnotherSchema:
-  type: object
-  properties:
-    name:
-      type: string
-    address:
-      type: string
-  required:
-    - name
+type: object
+properties:
+  name:
+    type: string
+  address:
+    type: string
+required:
+  - name

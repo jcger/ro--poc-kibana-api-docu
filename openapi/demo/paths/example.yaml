@@ -7,8 +7,8 @@ post:
       application/json:
         schema:
           oneOf:
-            - $ref: openapi/demo/paths/example.yaml
-            - $ref: openapi/demo/paths/example.yaml
+            - $ref: "#/components/schemas/new_schema"
+            - $ref: "#/components/schemas/another_schema"
   responses:
     "200":
       description: OK
